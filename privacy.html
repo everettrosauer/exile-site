@@ -8,25 +8,31 @@
 <meta property="og:title" content="Privacy | Exile">
 <meta property="og:description" content="What the Exile site collects today, how it is used, and how to have it deleted.">
 <meta property="og:image" content="https://www.joinexile.com/og.png">
+<meta name="theme-color" content="#070C16">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230F1B2D'/%3E%3Crect x='6' y='9' width='14' height='5' fill='%23F0F2EE'/%3E%3Crect x='6' y='19' width='26' height='5' fill='%23C9271B'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__exileReveal)document.documentElement.classList.remove("js")},2500);</script>
+<link rel="stylesheet" href="site.css">
 <link rel="stylesheet" href="pages.css">
 </head>
 <body>
 
-<header class="wrap top">
-  <a class="wordmark" href="index.html" aria-label="Exile, home">Exile</a>
-  <nav aria-label="Main">
-    <a class="link" href="index.html#board">The board</a>
-    <a class="link" href="index.html#firms">For firms</a>
-    <a class="link" href="index.html#who">About</a>
-    <a class="link" href="index.html#join">Join the waitlist</a>
-  </nav>
+<header class="top">
+  <div class="top__in">
+    <a class="wordmark" href="index.html" aria-label="Exile, home">Exile</a>
+    <nav aria-label="Main">
+      <a class="link" href="index.html#board">The board</a>
+      <a class="link" href="index.html#firms">For firms</a>
+      <a class="link" href="index.html#who">About</a>
+    </nav>
+    <a class="btn btn--small" href="index.html#join">Join the waitlist</a>
+  </div>
 </header>
 
-<main class="wrap">
+<main>
+<section class="brick tone-paper2 page is-in">
 <article class="doc">
 <h1>Privacy</h1>
-<p class="doc__date">Last updated November 26, 2026</p>
+<p class="doc__date cap">Last updated November 27, 2026</p>
 <div class="short">
 <h2>The short version</h2>
 <ul class="ticks">
@@ -57,7 +63,7 @@
 <p>Three companies process data for us. Vercel hosts the site. Supabase stores the waitlist. ImprovMX forwards any email you send to a joinexile.com address on to our inbox at Google. We do not sell your details or share them with advertisers.</p>
 
 <h2>How long we keep it</h2>
-<p>We keep waitlist details until you ask us to delete them or until Exile shuts down. To be removed, write to <span data-contact="Remove me from the waitlist"></span>. We will delete your details within 30 days.</p>
+<p>We keep waitlist details until you ask us to delete them or until Exile shuts down. To be removed, write to <span data-contact="Remove me from the waitlist"><a href="mailto:hello@joinexile.com">hello@joinexile.com</a></span>. We will delete your details within 30 days.</p>
 
 <h2>Before account linking opens</h2>
 <p>Linking a brokerage, crypto or prediction market account involves far more sensitive data than an email address. Before anyone can link an account, we will publish a new policy here that says exactly what is read, what is stored and who can see it.</p>
@@ -68,10 +74,11 @@
 <h2>Changes</h2>
 <p>If this policy changes, the date at the top of this page changes with it.</p>
 </article>
+</section>
 </main>
 
 <footer>
-  <div class="wrap foot">
+  <div class="foot">
     <div><a class="wordmark" href="index.html">Exile</a></div>
     <div>
       <ul class="foot__links">
@@ -82,11 +89,12 @@
         <li><a href="report.html">Sample scouting report</a></li>
       </ul>
       <p>Exile is not a broker, an exchange or an investment adviser. Nothing on this site is investment advice. Trading involves risk, and most traders lose money.</p>
-      <p>Contact: <span data-contact="Exile privacy"></span>. &copy; 2026 Exile.</p>
+      <p>Contact: <span data-contact="Exile privacy"><a href="mailto:hello@joinexile.com">hello@joinexile.com</a></span>. &copy; 2026 Exile.</p>
     </div>
   </div>
 </footer>
 
 <script src="config.js"></script>
+<script src="site.js"></script>
 </body>
 </html>
