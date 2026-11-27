@@ -1,0 +1,65 @@
+/* Shared by the inside pages: report, rules, privacy, terms.
+   Same tokens and type as the main page. If a token changes there, change it here too. */
+@font-face{font-family:"Big Shoulders Display";src:url("fonts/big-shoulders-display.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Big Shoulders Text";src:url("fonts/big-shoulders-text.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Newsreader";src:url("fonts/newsreader.woff2") format("woff2");font-weight:200 800;font-display:swap}
+
+:root{
+  --paper:#F0F2EE; --bar:#E0E7E0; --ink:#0F1B2D; --ink-2:#4B576B;
+  --stamp:#2437C9; --out:#C9271B; --gain:#17764A; --hover:#DCE2F5; --white:#FBFCFA;
+  --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue",Impact,sans-serif;
+  --ui:"Big Shoulders Text","Arial Narrow","Helvetica Neue",Arial,sans-serif;
+  --body:"Newsreader",Georgia,"Times New Roman",serif;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.125rem;line-height:1.5;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:inherit}
+p{margin:0 0 1em}
+:focus-visible{outline:3px solid var(--stamp);outline-offset:3px}
+.wrap{max-width:1180px;margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;padding-block:20px}
+.wordmark{position:relative;font-family:var(--display);font-weight:900;font-size:2.1rem;line-height:1;letter-spacing:.03em;text-transform:uppercase;text-decoration:none}
+.wordmark::after{content:"";position:absolute;left:46%;right:-18px;bottom:-5px;height:4px;background:var(--out)}
+.top nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px clamp(14px,2.4vw,30px);margin-left:auto}
+.top nav a.link{font-family:var(--ui);font-weight:600;font-size:1.125rem;text-decoration:none}
+.top nav a.link:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--ui);font-weight:700;font-size:1.125rem;letter-spacing:.02em;line-height:1;padding:13px 20px 12px;border:2px solid var(--stamp);border-radius:3px;background:var(--stamp);color:#fff;text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--ink);border-color:var(--ink)}
+.btn--ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:var(--paper)}
+.btn--small{font-size:1rem;padding:10px 14px 9px}
+
+.stamp{display:inline-block;font-family:var(--ui);font-weight:800;font-size:.8125rem;line-height:1;letter-spacing:.14em;text-transform:uppercase;padding:4px 7px 3px;border:2px solid currentColor;border-radius:3px;transform:rotate(-4deg);white-space:nowrap}
+.stamp--out{color:var(--out)}
+.stamp--ok{color:var(--stamp)}
+.stamp--plain{color:var(--ink-2);transform:none}
+
+.ticks{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ticks li{position:relative;padding-left:22px}
+.ticks li::before{content:"";position:absolute;left:1px;top:.58em;width:7px;height:7px;background:currentColor}
+.pos{color:var(--gain)}
+.neg{color:var(--out)}
+
+/* Long form pages: rules, privacy, terms */
+.doc{max-width:41em;padding-top:clamp(20px,5vw,56px)}
+.doc h1{margin:0 0 .25em;font-family:var(--display);font-weight:900;font-size:clamp(2.8rem,8vw,5rem);line-height:.9;text-transform:uppercase}
+.doc__date{margin:0 0 clamp(24px,4vw,40px);font-family:var(--ui);font-weight:600;font-size:1.0625rem;color:var(--ink-2)}
+.doc h2{margin:1.7em 0 .4em;padding-top:.5em;border-top:2px solid var(--ink);font-family:var(--ui);font-weight:800;font-size:1.6rem;line-height:1.1}
+.doc ul{margin:0 0 1em}
+.doc .short{margin:0 0 8px;padding:16px 18px;border:2px solid var(--ink);background:var(--white)}
+.doc .short h2{margin:0 0 .5em;padding:0;border:0}
+.doc .short ul{margin:0}
+
+footer{margin-top:clamp(64px,10vw,128px);padding-block:28px 44px;border-top:2px solid var(--ink);font-size:.9375rem;color:var(--ink-2)}
+footer .wordmark{font-size:1.6rem;color:var(--ink)}
+.foot{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,9fr);gap:24px clamp(24px,6vw,88px);align-items:start}
+.foot p{margin:0 0 .7em;max-width:52em}
+.foot__links{display:flex;flex-wrap:wrap;gap:6px 22px;margin:0 0 1em;padding:0;list-style:none;font-family:var(--ui);font-weight:700;font-size:1.0625rem;color:var(--ink)}
+@media (max-width:900px){.foot{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:720px){.top nav{margin-left:0;flex-basis:100%}.top nav a.link{font-size:1.0625rem}}

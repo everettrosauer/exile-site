@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample scouting report | Exile</title>
+<meta name="description" content="What a trading firm receives for each top Pro finisher on Exile: risk control, sizing, behavior after a loss, and what was checked. Sample data.">
+<meta property="og:title" content="Exile sample scouting report">
+<meta property="og:description" content="What a firm receives for each top Pro finisher. Behavior first, returns second. Sample data.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://joinexile.com/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230F1B2D'/%3E%3Crect x='6' y='9' width='14' height='5' fill='%23F0F2EE'/%3E%3Crect x='6' y='19' width='26' height='5' fill='%23C9271B'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="pages.css">
+<style>
+/* The report is one document on a desk: a single ruled sheet, numbers in the condensed face, prose in the serif. */
+.intro{max-width:900px;margin:clamp(12px,3vw,32px) auto 0}
+.intro h1{margin:0 0 .2em;font-family:var(--display);font-weight:900;font-size:clamp(2.6rem,7vw,4.6rem);line-height:.9;text-transform:uppercase}
+.intro p{max-width:38em;margin:0 0 18px}
+.actions{display:flex;flex-wrap:wrap;gap:10px 12px}
+
+.report{max-width:900px;margin:clamp(20px,3vw,32px) auto 0;border:2px solid var(--ink);background:var(--white)}
+.report > *{padding:clamp(18px,3vw,28px) clamp(16px,3.4vw,36px)}
+.report > * + *{border-top:2px solid var(--ink)}
+.report h2{margin:0 0 .5em;font-family:var(--ui);font-weight:800;font-size:1.5rem;line-height:1.1}
+.report p:last-child{margin-bottom:0}
+
+.rhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:14px 24px}
+.rhead__kind{margin:0 0 6px;font-family:var(--ui);font-weight:700;font-size:1.125rem;color:var(--ink-2)}
+.rhead h2{margin:0 0 8px;font-family:var(--display);font-weight:900;font-size:clamp(3rem,10vw,5.4rem);line-height:.82;overflow-wrap:anywhere}
+.rhead__meta{margin:0;font-family:var(--ui);font-weight:600;font-size:1.125rem}
+.rhead__stamps{display:flex;flex-wrap:wrap;gap:12px;padding-top:6px}
+
+.read p{font-size:1.1875rem;max-width:36em}
+
+.stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin:0;padding:0}
+.stats div{padding:14px 12px 10px}
+.stats div:first-child{padding-left:clamp(16px,3.4vw,36px)}
+.stats div + div{border-left:1px solid var(--ink)}
+.stats dt{font-family:var(--ui);font-weight:600;font-size:.9375rem;color:var(--ink-2)}
+.stats dd{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.05;font-variant-numeric:tabular-nums}
+
+.two{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(20px,4vw,44px);align-items:start}
+.two--even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.chart svg{display:block;width:100%;height:auto}
+.chart text{font-family:var(--ui);font-weight:600;font-size:13px;fill:var(--ink-2)}
+.cap{margin:8px 0 0;font-size:1rem;color:var(--ink-2)}
+
+.facts{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:1.125rem;font-variant-numeric:tabular-nums}
+.facts th{padding:9px 12px 8px 0;text-align:left;font-weight:600;border-top:1px solid rgba(15,27,45,.3)}
+.facts td{padding:9px 0 8px;text-align:right;font-weight:800;white-space:nowrap;border-top:1px solid rgba(15,27,45,.3)}
+.facts tr:first-child th,.facts tr:first-child td{border-top:0}
+.facts small{display:block;font-family:var(--body);font-weight:400;font-size:.9375rem;line-height:1.3;color:var(--ink-2)}
+
+.bars{display:grid;gap:10px;margin:0 0 14px;font-family:var(--ui);font-size:1.125rem;font-variant-numeric:tabular-nums}
+.bars div{display:grid;grid-template-columns:8.4em minmax(0,1fr) 4.2em;align-items:center;gap:10px}
+.bars span:first-child{font-weight:600}
+.bars span:last-child{text-align:right;font-weight:800}
+.bars i{display:block;height:14px;background:var(--ink)}
+.bars i.neg{background:var(--out)}
+.bars i.pos{background:var(--gain)}
+.bars--weeks div{grid-template-columns:4.4em minmax(0,1fr) 4.2em}
+
+.ledger{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:1.0625rem;font-variant-numeric:tabular-nums}
+.ledger caption{padding:0 0 6px;text-align:left;font-weight:800;font-size:1.125rem}
+.ledger th{padding:6px 8px 5px 0;text-align:left;font-weight:600;font-size:.9375rem;color:var(--ink-2);border-bottom:1px solid var(--ink);white-space:nowrap}
+.ledger td{padding:8px 8px 7px 0;vertical-align:top;border-top:1px solid rgba(15,27,45,.3)}
+.ledger tr:first-child td{border-top:0}
+.ledger .num{text-align:right;white-space:nowrap;padding-right:0;padding-left:8px}
+.ledger th.num{padding-left:8px}
+.ledger b{font-weight:700}
+.ledger small{display:block;font-family:var(--body);font-size:.9375rem;line-height:1.3;color:var(--ink-2)}
+.ledger td:first-child{white-space:nowrap;color:var(--ink-2)}
+
+.ask{margin:0;padding:0 0 0 1.3em}
+.ask li{margin:0 0 .5em;padding-left:.2em}
+.limits{background:var(--paper)}
+.rfoot{font-size:.9375rem;color:var(--ink-2)}
+
+@media (max-width:760px){
+  .two,.two--even{grid-template-columns:minmax(0,1fr)}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stats div:nth-child(4){border-left:0;padding-left:clamp(16px,3.4vw,36px)}
+  .stats div:nth-child(n+4){border-top:1px solid var(--ink)}
+  .hide-s{display:none}
+}
+@media (max-width:460px){
+  .bars div{grid-template-columns:6.6em minmax(0,1fr) 3.8em}
+}
+@media print{
+  @page{margin:12mm}
+  body{background:#fff;font-size:10.5pt}
+  .top,.intro,footer,.noprint{display:none}
+  .wrap{padding:0;max-width:none}
+  .report{margin:0;max-width:none;border-width:1.5pt}
+  .report > *{padding:10pt 14pt;break-inside:avoid}
+  .limits{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="wordmark" href="index.html" aria-label="Exile, home">Exile</a>
+  <nav aria-label="Main">
+    <a class="link" href="index.html#board">The board</a>
+    <a class="link" href="index.html#firms">For firms</a>
+    <a class="link" href="index.html#who">About</a>
+    <a class="link" href="rules.html">Rules</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <div class="intro">
+    <h1>Sample scouting report</h1>
+    <p>This is what a firm receives for each top Pro finisher. The trader below is made up. The measures are the real ones. Returns come second here. How someone sizes, cuts and trades after a loss comes first.</p>
+    <div class="actions">
+      <a class="btn" href="index.html#join-firm">Talk to us about the pilot</a>
+      <button class="btn btn--ghost" type="button" id="print" hidden>Print or save as PDF</button>
+    </div>
+  </div>
+
+  <article class="report" aria-labelledby="r-name">
+    <header class="rhead">
+      <div>
+        <p class="rhead__kind">Exile scouting report</p>
+        <h2 id="r-name">ridgeline</h2>
+        <p class="rhead__meta" id="r-meta"></p>
+      </div>
+      <div class="rhead__stamps"><span class="stamp stamp--plain">Sample data</span><span class="stamp stamp--ok">Full record</span></div>
+    </header>
+
+    <section class="read">
+      <h2>The read</h2>
+      <p id="r-read"></p>
+    </section>
+
+    <dl class="stats" id="r-stats"></dl>
+
+    <section class="two">
+      <div>
+        <h2>Season curve</h2>
+        <div class="chart" id="r-chart"></div>
+        <p class="cap" id="r-chartcap"></p>
+      </div>
+      <div>
+        <h2>Week by week</h2>
+        <div class="bars bars--weeks" id="r-weeks"></div>
+        <p class="cap" id="r-weekcap"></p>
+      </div>
+    </section>
+
+    <section class="two two--even">
+      <div>
+        <h2>Risk control</h2>
+        <table class="facts"><tbody id="r-risk"></tbody></table>
+      </div>
+      <div>
+        <h2>After a loss</h2>
+        <div class="bars" id="r-after"></div>
+        <table class="facts"><tbody id="r-afterfacts"></tbody></table>
+      </div>
+    </section>
+
+    <section class="two two--even">
+      <div>
+        <h2>Where the profit came from</h2>
+        <table class="facts"><tbody id="r-conc"></tbody></table>
+      </div>
+      <div>
+        <h2>By market</h2>
+        <table class="ledger" id="r-mkt"></table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Biggest wins and losses</h2>
+      <div class="two two--even">
+        <table class="ledger" id="r-wins"></table>
+        <table class="ledger" id="r-losses"></table>
+      </div>
+      <p class="cap">Hit is what the trade did to the whole account. Result is what it did to the money in the trade. The firm receives the full ledger of <span id="r-n"></span> trades with this report.</p>
+    </section>
+
+    <section>
+      <h2>Questions we would ask</h2>
+      <ol class="ask" id="r-ask"></ol>
+    </section>
+
+    <section class="two two--even">
+      <div>
+        <h2>What was checked</h2>
+        <ul class="ticks">
+          <li>Three accounts linked before day one: one prediction market account, one crypto exchange account, one brokerage account.</li>
+          <li>Every trade was read from the account. Nothing was typed in.</li>
+          <li>Deposits and withdrawals are taken out of the return.</li>
+          <li>Identity check passed.</li>
+          <li>Statement check passed: season statements for every account this trader holds at the linked venues.</li>
+          <li>Account size is private. This trader agreed to share a band: $5,000 to $25,000.</li>
+        </ul>
+      </div>
+      <div>
+        <h2>What this report can't tell you</h2>
+        <ul class="ticks">
+          <li>Whether it lasts. Four weeks shows how someone handles risk. It does not prove an edge.</li>
+          <li>What happened in accounts at venues the trader never linked.</li>
+          <li>Why each trade was made. That is what the interview is for.</li>
+          <li>How this style holds up at ten times the size.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer class="rfoot">
+      <p>Sample data. ridgeline is not a real person and these are not real results. Exile is not a broker, an exchange or an investment adviser. A scouting report describes what happened in one season. It is not a recommendation to hire anyone or to give anyone money to trade.</p>
+    </footer>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div><a class="wordmark" href="index.html">Exile</a></div>
+    <div>
+      <ul class="foot__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="rules.html">Rules</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms</a></li>
+      </ul>
+      <p>Exile is not a broker, an exchange or an investment adviser. Nothing on this site is investment advice. Trading involves risk, and most traders lose money.</p>
+      <p>Contact: <span data-contact="Exile scouting report"></span>. &copy; 2026 Exile.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+/* Sample season for one made up trader. The ledger below adds up, day by day, to the curve.
+   Every number on the page is computed from these two things, so the report cannot disagree with itself.
+   Ledger row: [day of season, market, trade, position size as % of account, result as % of the position]. */
+const LINE = 15, RANK = 1, FIELD = 12;
+const CURVE = [100,99.3,99,97.4,97,96.7,97.9,97,97.8,95.9,96.5,98.3,98.4,97.1,99.5,99.6,102.1,104,105,104.5,105.9,105.6,106.5,108.3,110.4,110.7,113.3,115.1,114.8];
+const LEDGER = [[1,"C","BTC spot, three day hold",4.3,-5.5],[1,"P","Home sales over 4.1M: Yes",0.52,-100],[1,"C","BTC spot, three day hold",2.05,2.92],[2,"C","BTC spot, three day hold",4.36,-8.43],[2,"C","BTC spot, three day hold",1.63,-1.4],[2,"C","BTC spot, three day hold",2.31,3.8],[3,"S","QQQ shares, one day hold",7.25,-1.54],[3,"P","Retail sales beat the forecast: Yes",1.64,-100],[3,"C","BTC spot, three day hold",1.79,7.29],[4,"P","Jobless claims under 220K: Yes",1.63,-31.07],[4,"C","BTC spot, three day hold",3.51,-0.65],[4,"P","Job openings over 7.5M: No",0.66,17.91],[5,"C","BTC spot, three day hold",2.73,-1.27],[5,"C","BTC spot, three day hold",2.18,-0.98],[5,"P","Consumer sentiment over 72: No",1,-25.42],[6,"P","Durable goods orders up for the month: Yes",1.1,33.9],[6,"P","Core inflation at or under 0.2% for the month: Yes",1.57,18.15],[6,"P","Thirty year mortgage rate under 6.5%: Yes",2.32,25.18],[7,"C","BTC spot, three day hold",4.27,-1.74],[7,"P","Producer prices up 0.3% or more: No",1.61,-100],[7,"P","Payrolls over 150K: Yes",1.12,68.97],[8,"P","New York high over 40F on Saturday: Yes",1.85,-100],[8,"P","Bitcoin over $100K on Friday: No",2.16,45.11],[8,"P","Unemployment rate at or under 4.2%: Yes",2.67,63.74],[9,"C","BTC spot, three day hold",4.77,-0.2],[9,"P","Chicago snowfall over 3 inches this week: No",1.85,-100],[9,"S","TLT shares, two day hold",5.94,-1.37],[10,"P","Fed statement drops the word patient: No",1.02,-100],[10,"S","SPY shares, into the data",5.25,0.38],[10,"P","Ten year yield closes the week over 4.5%: No",2.15,75.79],[11,"C","BTC spot, three day hold",5.78,9.57],[11,"P","Housing starts over 1.4M: No",2.2,58.43],[11,"C","BTC spot, three day hold",5.84,0.42],[12,"P","Trade deficit narrower than last month: Yes",1.04,-13.8],[12,"P","National gas price under $3.10 on Friday: Yes",1.16,9.55],[12,"S","IWM shares, one day hold",4.9,2.74],[13,"S","QQQ shares, one day hold",8.25,-9.73],[13,"C","BTC spot, three day hold",4.24,-1.64],[13,"C","BTC spot, three day hold",4.51,-9.95],[14,"P","Factory index over 50: No",2.07,45.93],[14,"P","Home sales over 4.1M: Yes",2.87,58.96],[14,"C","BTC spot, three day hold",3.08,-5.61],[15,"P","Retail sales beat the forecast: Yes",1.29,29.92],[15,"P","Jobless claims under 220K: Yes",1.12,-100],[15,"P","Job openings over 7.5M: No",2.03,41.1],[16,"C","BTC spot, three day hold",5.27,2.18],[16,"P","Consumer sentiment over 72: No",1.78,91.17],[16,"P","Durable goods orders up for the month: Yes",1.41,54.7],[17,"P","Core inflation at or under 0.2% for the month: Yes",2.37,46.57],[17,"P","Thirty year mortgage rate under 6.5%: Yes",2.16,23.84],[17,"P","Producer prices up 0.3% or more: No",0.95,25.41],[18,"P","Payrolls over 150K: Yes",2.08,56.49],[18,"C","BTC spot, three day hold",3.3,-3.76],[18,"S","TLT shares, two day hold",3.35,-2.64],[19,"P","Weekly jobless claims over 230K: No",0.85,-100],[19,"P","New York high over 40F on Saturday: Yes",1.51,-60.23],[19,"P","Bitcoin over $100K on Friday: No",2.09,61.28],[20,"C","BTC spot, three day hold",4.09,0.13],[20,"C","BTC spot, three day hold",5.23,-1.99],[20,"P","Unemployment rate at or under 4.2%: Yes",2.21,65.11],[21,"C","BTC spot, three day hold",5.29,-2.21],[21,"P","Chicago snowfall over 3 inches this week: No",2.05,16.98],[21,"P","Fed statement drops the word patient: No",2.59,-19.87],[22,"P","Ten year yield closes the week over 4.5%: No",0.93,79.57],[22,"P","Housing starts over 1.4M: No",2.26,-24.09],[22,"P","Trade deficit narrower than last month: Yes",0.84,78.79],[23,"P","Fed holds in January: Yes",1.7,11],[23,"C","BTC spot, three day hold",4.8,-1.93],[23,"P","National gas price under $3.10 on Friday: Yes",2.27,70.43],[24,"C","ETH spot, two day hold",5.1,6.2],[24,"P","Factory index over 50: No",1.89,79.74],[24,"S","SPY shares, into the data",5.5,2.1],[25,"P","Home sales over 4.1M: Yes",1.22,63],[25,"P","Retail sales beat the forecast: Yes",0.75,-100],[25,"C","BTC spot, three day hold",2.65,9.44],[26,"P","Inflation print at or under 2.9%: Yes",0.69,54],[26,"C","BTC spot, three day hold",3.92,2.22],[26,"P","Jobless claims under 220K: Yes",2.59,72.81],[27,"P","Job openings over 7.5M: No",2.45,28.92],[27,"P","Consumer sentiment over 72: No",1.76,40.17],[27,"P","Durable goods orders up for the month: Yes",2.1,8.25],[28,"P","Core inflation at or under 0.2% for the month: Yes",1.37,90.99],[28,"P","Thirty year mortgage rate under 6.5%: Yes",2.17,-100],[28,"P","Producer prices up 0.3% or more: No",2.03,32.66]];
+const MKT = {P:"Prediction markets", C:"Crypto", S:"Stocks"};
+
+const M = "−";
+const pct = (x,d=1) => (x<0?M:"+") + Math.abs(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}) + "%";
+const plain = (x,d=1) => Math.abs(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}) + "%";
+const cls = x => x<0 ? "neg" : "pos";
+const day = d => "Jan " + (3+d);
+const $ = id => document.getElementById(id);
+
+const T = LEDGER.map(([d,m,what,s,r]) => ({d,m,what,s,r,hit:s*r/100}));
+const N = T.length;
+
+/* season level */
+let peak = CURVE[0], maxdd = 0, ddDay = 0;
+CURVE.forEach((v,d) => { peak = Math.max(peak,v); const dd=(1-v/peak)*100; if (dd>maxdd){maxdd=dd; ddDay=d;} });
+const ret = CURVE[28]-100, score = ret/Math.max(maxdd,1);
+const daily = CURVE.slice(1).map((v,i) => (v/CURVE[i]-1)*100);
+const upDays = daily.filter(x => x>0).length;
+const worstDay = Math.min(...daily), worstDayN = daily.indexOf(worstDay)+1;
+const weeks = [7,14,21,28].map(d => (CURVE[d]/CURVE[d-7]-1)*100);
+
+/* trade level */
+const wins = T.filter(t => t.r>0).length;
+const sizes = T.map(t => t.s).sort((a,b) => a-b);
+const median = (sizes[N/2-1]+sizes[N/2])/2;
+const biggest = T.reduce((a,t) => t.s>a.s ? t : a);
+const byHit = [...T].sort((a,b) => b.hit-a.hit);
+const worstTrade = byHit[N-1];
+const net = T.reduce((a,t) => a+t.hit,0);
+const top1 = byHit[0].hit/net*100, top3 = (byHit[0].hit+byHit[1].hit+byHit[2].hit)/net*100;
+const without = new Set(byHit.slice(0,3));
+let v = 100; for (let d=1; d<=28; d++) v *= 1 + T.filter(t => t.d===d && !without.has(t)).reduce((a,t) => a+t.hit,0)/100;
+const retEx3 = v-100;
+const fullLoss = T.filter(t => t.r<=-99.9).length;
+
+const afterL = [], afterW = [];
+for (let i=1; i<N; i++) (T[i-1].r<0 ? afterL : afterW).push(T[i]);
+const avg = a => a.reduce((x,t) => x+t.s,0)/a.length;
+const sizeL = avg(afterL), sizeW = avg(afterW);
+const winAfterL = afterL.filter(t => t.r>0).length/afterL.length*100;
+let run=0, best=0, endAt=-1;
+T.forEach((t,i) => { if (t.r<0){ run++; if (run>best){best=run; endAt=i;} } else run=0; });
+const next = T[endAt+1];
+
+/* header and the read */
+$("r-meta").textContent = `Pro division, Season Zero. Jan 4 to Jan 31, 2027. Rank ${RANK} of ${FIELD}.`;
+$("r-n").textContent = N;
+const weekLine = weeks[0]<0 && weeks.slice(1).every(x => x>0)
+  ? `Down ${plain(weeks[0])} in week 1, then up three weeks in a row.`
+  : `Up in ${weeks.filter(x => x>0).length} of 4 weeks.`;
+$("r-read").textContent =
+  `Made ${plain(ret)} with a worst drop of ${plain(maxdd)}, so the line was never close. ` +
+  `Trades small and often: ${N} trades, a typical position of ${plain(median)} of the account. ` +
+  `No single trade made the season. The best one was ${plain(top1,0)} of the profit, and the record is still up ${plain(retEx3)} without the best three. ` +
+  `Sizes down after losing: ${plain(sizeL)} of the account after a loss, ${plain(sizeW)} after a win. ` + weekLine;
+
+$("r-stats").innerHTML = [
+  ["Return", `<span class="${cls(ret)}">${pct(ret)}</span>`],
+  ["Worst drop", pct(-maxdd)],
+  ["Score", (score<0?M:"+")+Math.abs(score).toFixed(2)],
+  ["Trades", N],
+  ["Win rate", Math.round(wins/N*100)+"%"],
+  ["Up days", upDays+" of 28"]
+].map(([k,val]) => `<div><dt>${k}</dt><dd>${val}</dd></div>`).join("");
+
+/* curve, same drawing as the board profile */
+function chart(){
+  const W=Math.max(300,Math.min(520,(window.innerWidth||520)-72)),H=230,l=44,r=20,top=16,b=28,c=CURVE;
+  const thr=[]; let pk=c[0]; for (const x of c){ pk=Math.max(pk,x); thr.push(pk*(1-LINE/100)); }
+  const lo=Math.min(...c,...thr), hi=Math.max(...c), step=(hi-lo)>36?20:10;
+  const y0=Math.floor((lo-2)/step)*step, y1=Math.ceil((hi+2)/step)*step;
+  const X=d=>l+(W-l-r)*d/28, Y=x=>top+(H-top-b)*(1-(x-y0)/(y1-y0));
+  const line=c.map((x,d)=>(d?"L":"M")+X(d).toFixed(1)+" "+Y(x).toFixed(1)).join(" ");
+  const area=line+` L${X(28).toFixed(1)} ${Y(y0).toFixed(1)} L${X(0)} ${Y(y0).toFixed(1)} Z`;
+  let tp=""; thr.forEach((x,d)=>{ tp += d ? ` H${X(d).toFixed(1)} V${Y(x).toFixed(1)}` : `M${X(0)} ${Y(x).toFixed(1)}`; });
+  let grid="";
+  for (let x=y0; x<=y1; x+=step){
+    grid += `<line x1="${l}" x2="${W-r}" y1="${Y(x)}" y2="${Y(x)}" stroke="#0F1B2D" stroke-opacity="${x===100?.55:.13}" stroke-width="1"/>`;
+    grid += `<text x="${l-8}" y="${Y(x)+4}" text-anchor="end">${x===100?"Start":pct(x-100,0)}</text>`;
+  }
+  let wk=""; [7,14,21,28].forEach((d,i)=>{ wk += `<text x="${X(d)}" y="${H-8}" text-anchor="end">Week ${i+1}</text>`; });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Season curve for ridgeline. Return ${pct(ret)}, worst drop ${maxdd.toFixed(1)}%.">
+    ${grid}${wk}
+    <path d="${area}" fill="#0F1B2D" fill-opacity=".07"/>
+    <path d="${tp}" fill="none" stroke="#C9271B" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="${X(0)+6}" y="${Y(thr[0])+15}" style="fill:#C9271B;font-weight:800">The line</text>
+    <path d="${line}" fill="none" stroke="#0F1B2D" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(ddDay)}" cy="${Y(c[ddDay])}" r="4" fill="#F0F2EE" stroke="#0F1B2D" stroke-width="2"/>
+    <circle cx="${X(28)}" cy="${Y(c[28])}" r="5" fill="#0F1B2D" stroke="#F0F2EE" stroke-width="2"/>
+  </svg>`;
+}
+$("r-chart").innerHTML = chart();
+$("r-chartcap").textContent = `The red line trails 15% below the highest point so far. The open dot is the low on ${day(ddDay)}, with ${(LINE-maxdd).toFixed(1)} points of room left.`;
+
+const wkMax = Math.max(...weeks.map(Math.abs));
+$("r-weeks").innerHTML = weeks.map((x,i) => `<div><span>Week ${i+1}</span><i class="${cls(x)}" style="width:${Math.max(3,Math.abs(x)/wkMax*100).toFixed(0)}%"></i><span class="${cls(x)}">${pct(x)}</span></div>`).join("");
+$("r-weekcap").textContent = `Worst single day: ${pct(worstDay)} on ${day(worstDayN)}.`;
+
+const row = (k,val,sub) => `<tr><th scope="row">${k}${sub?`<small>${sub}</small>`:""}</th><td>${val}</td></tr>`;
+$("r-risk").innerHTML =
+  row("Typical position", plain(median), "Median size, as a share of the account") +
+  row("Largest position", plain(biggest.s), `${biggest.what}, ${day(biggest.d)}`) +
+  row("Worst single trade", pct(worstTrade.hit,2), `Hit to the account. ${worstTrade.what}`) +
+  row("Worst day", pct(worstDay), day(worstDayN)) +
+  row("Closest to the line", (LINE-maxdd).toFixed(1)+" pts left", `On ${day(ddDay)}, after a ${plain(maxdd)} drop`);
+
+const sMax = Math.max(sizeL,sizeW);
+$("r-after").innerHTML =
+  `<div><span>After a loss</span><i style="width:${(sizeL/sMax*100).toFixed(0)}%"></i><span>${plain(sizeL)}</span></div>` +
+  `<div><span>After a win</span><i style="width:${(sizeW/sMax*100).toFixed(0)}%;opacity:.45"></i><span>${plain(sizeW)}</span></div>`;
+$("r-afterfacts").innerHTML =
+  row("Average position size", sizeL<sizeW ? "Sizes down" : "Sizes up", "The bars above: next trade after a loss, next trade after a win") +
+  row("Win rate right after a loss", Math.round(winAfterL)+"%", `Against ${Math.round(wins/N*100)}% overall`) +
+  row("Longest losing run", best+" trades", `Together they cost ${plain(T.slice(endAt-best+1, endAt+1).reduce((x,t) => x+t.hit,0),2)} of the account`);
+
+$("r-conc").innerHTML =
+  row("Best trade", plain(top1,0)+" of profit", `${byHit[0].what}, ${day(byHit[0].d)}`) +
+  row("Best three trades", plain(top3,0)+" of profit") +
+  row("Return without the best three", `<span class="${cls(retEx3)}">${pct(retEx3)}</span>`, "The season replayed with those trades removed") +
+  row("Held to a total loss", fullLoss+" of "+N+" trades", "Positions that settled at zero");
+
+$("r-mkt").innerHTML = `<thead><tr><th scope="col">Market</th><th scope="col" class="num">Trades</th><th scope="col" class="num">Win rate</th><th scope="col" class="num">Added to account</th></tr></thead><tbody>` +
+  ["P","C","S"].map(m => { const a=T.filter(t => t.m===m); const h=a.reduce((x,t) => x+t.hit,0);
+    return `<tr><td style="color:inherit"><b>${MKT[m]}</b></td><td class="num">${a.length}</td><td class="num">${Math.round(a.filter(t => t.r>0).length/a.length*100)}%</td><td class="num ${cls(h)}"><b>${(h<0?M:"+")+Math.abs(h).toFixed(1)} pts</b></td></tr>`; }).join("") + `</tbody>`;
+
+const tradeTable = (title, list) => `<caption>${title}</caption><thead><tr><th scope="col">Date</th><th scope="col">Trade</th><th scope="col" class="num hide-s">Size</th><th scope="col" class="num">Result</th><th scope="col" class="num">Hit</th></tr></thead><tbody>` +
+  list.map(t => `<tr><td>${day(t.d)}</td><td><b>${t.what}</b><small>${MKT[t.m]}</small></td><td class="num hide-s">${plain(t.s)}</td><td class="num ${cls(t.r)}">${pct(t.r,0)}</td><td class="num ${cls(t.hit)}"><b>${pct(t.hit,2)}</b></td></tr>`).join("") + `</tbody>`;
+$("r-wins").innerHTML = tradeTable("Five biggest wins", byHit.slice(0,5));
+$("r-losses").innerHTML = tradeTable("Five biggest losses", byHit.slice(-5).reverse());
+
+const ask = [];
+if (fullLoss) ask.push(`${fullLoss} positions were held all the way to zero. What is your rule for getting out early?`);
+if (weeks[0]<0) ask.push(`Week 1 was down ${plain(weeks[0])}. What did you change before week 2?`);
+ask.push(`Your largest position was ${plain(biggest.s)} of the account, about ${(biggest.s/median).toFixed(0)} times your usual size. What made that trade different?`);
+ask.push(sizeL<sizeW ? `You trade smaller after a loss. Is that a written rule or a habit?` : `You trade bigger after a loss. Walk us through one of those trades.`);
+const predHit = T.filter(t => t.m==="P").reduce((x,t) => x+t.hit,0), restHit = net-predHit;
+ask.push(restHit<0
+  ? `All of the profit came from prediction markets. Crypto and stocks together lost ${Math.abs(restHit).toFixed(1)} points. Why keep trading them?`
+  : `${Math.round(predHit/net*100)}% of the profit came from prediction markets. How would you trade if those markets were closed to you?`);
+$("r-ask").innerHTML = ask.map(q => `<li>${q}</li>`).join("");
+
+/* Printing only works when the page is opened on its own, not inside a preview frame. */
+const pb = $("print");
+if (window.self === window.top && typeof window.print === "function"){ pb.hidden = false; pb.addEventListener("click", () => window.print()); }
+</script>
+</body>
+</html>

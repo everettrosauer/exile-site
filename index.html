@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exile trading seasons</title>
+<meta name="description" content="Exile is a proving ground for traders outside Wall Street. Link your real accounts, play a season, and earn a verified record that trading firms can read.">
+<meta property="og:title" content="Exile. Outside the system. On the record.">
+<meta property="og:description" content="Verified trading seasons on real accounts. Stocks, crypto and prediction markets in one record.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://joinexile.com/">
+<meta property="og:image" content="https://joinexile.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230F1B2D'/%3E%3Crect x='6' y='9' width='14' height='5' fill='%23F0F2EE'/%3E%3Crect x='6' y='19' width='26' height='5' fill='%23C9271B'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"Big Shoulders Display";src:url("fonts/big-shoulders-display.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Big Shoulders Text";src:url("fonts/big-shoulders-text.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Newsreader";src:url("fonts/newsreader.woff2") format("woff2");font-weight:200 800;font-display:swap}
+
+:root{
+  /* Layout idea: a tournament record sheet. Left aligned, one heavy ruled board, and a single red line as the only loud thing on the page. */
+  --paper:#F0F2EE;   /* bond paper, cool not cream */
+  --bar:#E0E7E0;     /* green bar tint for alternate rows */
+  --ink:#0F1B2D;     /* carbon ink */
+  --ink-2:#4B576B;   /* secondary text */
+  --stamp:#2437C9;   /* notary stamp blue: actions and verified */
+  --out:#C9271B;     /* the line, losses, exiled */
+  --gain:#17764A;    /* gains */
+  --hover:#DCE2F5;
+  --white:#FBFCFA;
+  --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue",Impact,sans-serif;
+  --ui:"Big Shoulders Text","Arial Narrow","Helvetica Neue",Arial,sans-serif;
+  --body:"Newsreader",Georgia,"Times New Roman",serif;
+  color-scheme:light;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.125rem;line-height:1.5;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--stamp);outline-offset:3px}
+.firms :focus-visible{outline-color:var(--paper)}
+.wrap{max-width:1180px;margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Top bar */
+.top{display:flex;align-items:center;gap:14px 20px;padding-block:20px}
+.wordmark{position:relative;font-family:var(--display);font-weight:900;font-size:2.1rem;line-height:1;letter-spacing:.03em;text-transform:uppercase;text-decoration:none}
+.wordmark::after{content:"";position:absolute;left:46%;right:-18px;bottom:-5px;height:4px;background:var(--out)}
+.top nav{display:flex;align-items:center;gap:6px clamp(14px,2.4vw,30px);margin-left:auto}
+.top nav a.link{font-family:var(--ui);font-weight:600;font-size:1.125rem;text-decoration:none}
+.top nav a.link:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--ui);font-weight:700;font-size:1.125rem;letter-spacing:.02em;line-height:1;padding:13px 20px 12px;border:2px solid var(--stamp);border-radius:3px;background:var(--stamp);color:#fff;text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--ink);border-color:var(--ink)}
+.btn--ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:var(--paper)}
+.btn--paper{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.btn--paper:hover{background:var(--stamp);border-color:var(--stamp);color:#fff}
+.btn--line{background:transparent;color:var(--paper);border-color:var(--paper)}
+.btn--line:hover{background:var(--paper);border-color:var(--paper);color:var(--ink)}
+.btn--small{font-size:1rem;padding:10px 14px 9px}
+
+/* Hero */
+.hero{padding-top:clamp(20px,5vw,56px)}
+.hero h1{margin:0;font-family:var(--display);font-weight:900;font-size:clamp(3.1rem,11.4vw,8.5rem);line-height:.86;letter-spacing:-.005em;text-transform:uppercase}
+.hero h1 span{display:block}
+.hero__grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(28px,6vw,88px);align-items:start;margin-top:clamp(28px,4.5vw,56px)}
+.lede{margin:0;font-size:clamp(1.2rem,1.7vw,1.45rem);line-height:1.42;max-width:31em}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.hero__note{margin:22px 0 0;font-family:var(--ui);font-weight:600;font-size:1.0625rem;color:var(--ink-2)}
+
+/* The board */
+.board{border:2px solid var(--ink);background:var(--paper)}
+.board__head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding:10px 14px 9px;border-bottom:2px solid var(--ink);font-family:var(--ui);font-weight:700;font-size:1.125rem}
+.board__head small{font-weight:600;font-size:1rem;color:var(--ink-2)}
+.tabs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 14px;border-bottom:2px solid var(--ink)}
+.tabs__sep{font-family:var(--ui);font-weight:600;font-size:1rem;color:var(--ink-2);margin-left:14px;padding-left:16px;border-left:2px solid var(--ink)}
+.tab{font-family:var(--ui);font-weight:700;font-size:1.0625rem;line-height:1;padding:9px 12px 8px;border:2px solid transparent;border-radius:3px;background:transparent;color:var(--ink);cursor:pointer}
+.tab:hover{border-color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.sheet{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:1.125rem;font-variant-numeric:tabular-nums}
+.sheet th{padding:9px 14px 7px;text-align:left;font-weight:600;font-size:1rem;color:var(--ink-2);border-bottom:1px solid var(--ink);white-space:nowrap}
+.sheet td{padding:10px 14px;vertical-align:middle}
+.sheet .num{text-align:right;white-space:nowrap}
+.sheet .rank{width:1%;font-family:var(--display);font-weight:800;font-size:1.5rem;color:var(--ink-2)}
+.row{cursor:pointer}
+.row--alt{background:var(--bar)}
+.row:hover{background:var(--hover)}
+.who{font:inherit;font-weight:800;font-size:1.375rem;letter-spacing:.01em;padding:0;border:0;background:none;color:inherit;cursor:pointer;text-align:left}
+.who:hover{color:var(--stamp)}
+.sub{display:block;font-family:var(--body);font-weight:400;font-size:.9375rem;line-height:1.3;color:var(--ink-2)}
+.big{font-weight:800;font-size:1.375rem}
+.pos{color:var(--gain)}
+.neg{color:var(--out)}
+.cut td{padding:0}
+.cut__bar{height:5px;background:var(--out);transform-origin:left center}
+.cut__label{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 16px;padding:5px 14px 7px;color:var(--out);font-weight:700;font-size:1rem}
+.cut__label b{font-weight:800;letter-spacing:.02em}
+.row--out .who{color:var(--ink-2);text-decoration:line-through;text-decoration-thickness:2px}
+.row--out .num{color:var(--ink-2)}
+.stamp{display:inline-block;font-family:var(--ui);font-weight:800;font-size:.8125rem;line-height:1;letter-spacing:.14em;text-transform:uppercase;padding:4px 7px 3px;border:2px solid currentColor;border-radius:3px;transform:rotate(-4deg);white-space:nowrap}
+.stamp--out{color:var(--out)}
+.stamp--ok{color:var(--stamp)}
+.stamp--plain{color:var(--ink-2);transform:none}
+.gauge{position:relative;display:inline-block;width:76px;height:8px;margin-right:10px;vertical-align:middle;background:rgba(15,27,45,.14)}
+.gauge i{position:absolute;inset:0 auto 0 0;background:var(--ink)}
+.gauge--hot i{background:var(--out)}
+.gauge::after{content:"";position:absolute;right:-3px;top:-5px;bottom:-5px;width:3px;background:var(--out)}
+.board__foot{margin:0;padding:12px 14px 13px;border-top:2px solid var(--ink);font-size:1rem;color:var(--ink-2)}
+.mini .sheet td{padding-block:9px}
+.mini__more{display:inline-block;margin-top:14px;font-family:var(--ui);font-weight:700;font-size:1.0625rem}
+
+/* Sections */
+.sec{padding-top:clamp(64px,10vw,128px)}
+h2{margin:0 0 .35em;font-family:var(--display);font-weight:800;font-size:clamp(2.5rem,5.6vw,4.4rem);line-height:.94;text-wrap:balance}
+h3{margin:0 0 .3em;font-family:var(--ui);font-weight:800;font-size:1.5rem;line-height:1.1}
+.sec__intro{margin:0 0 clamp(24px,3vw,40px);max-width:36em}
+p{margin:0 0 1em}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(20px,3vw,40px);counter-reset:step}
+.steps li{counter-increment:step}
+.steps li::before{content:counter(step);display:block;margin-bottom:10px;font-family:var(--display);font-weight:900;font-size:4.6rem;line-height:.8;color:var(--stamp)}
+.steps p{margin:0;font-size:1.0625rem}
+
+.duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.duo__col{padding:clamp(22px,3vw,36px) clamp(0px,3vw,40px) clamp(22px,3vw,36px) 0}
+.duo__col + .duo__col{padding-left:clamp(20px,3vw,40px);padding-right:0;border-left:2px solid var(--ink)}
+.duo__tag{margin:0 0 14px;font-family:var(--ui);font-weight:600;font-size:1.0625rem;color:var(--ink-2)}
+.duo__demo{display:flex;flex-wrap:wrap;align-items:center;gap:12px;min-height:34px;margin-bottom:16px}
+.duo__line{flex:1 1 120px;height:5px;background:var(--out)}
+.duo__line + span{font-family:var(--ui);font-weight:800;color:var(--out)}
+.ticks{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ticks li{position:relative;padding-left:22px}
+.ticks li::before{content:"";position:absolute;left:1px;top:.58em;width:7px;height:7px;background:currentColor}
+
+.proof{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:clamp(24px,5vw,72px);align-items:start}
+.proof__stamp{display:inline-block;margin-top:12px;font-family:var(--display);font-weight:900;font-size:clamp(2.2rem,4.4vw,3.6rem);line-height:1;letter-spacing:.08em;text-transform:uppercase;color:var(--stamp);padding:10px 16px 6px;border:4px solid var(--stamp);border-radius:6px;transform:rotate(-5deg)}
+.proof__say{margin:clamp(28px,4vw,48px) 0 0;font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,3.6vw,3rem);line-height:1;text-wrap:balance;max-width:20em}
+/* Dashed means not shown or not known, here and on Highlights profiles. */
+.limits{margin-top:clamp(28px,4vw,48px);padding:clamp(18px,2.6vw,28px);border:2px dashed var(--ink-2)}
+.limits h3{margin-bottom:.6em}
+.limits .ticks{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px clamp(20px,4vw,48px)}
+.limits b{font-family:var(--ui);font-weight:800;font-size:1.1875rem}
+
+.firms{margin-top:clamp(64px,10vw,128px);padding-block:clamp(56px,9vw,112px);background:var(--ink);color:var(--paper)}
+.firms__grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,6vw,88px);align-items:start}
+.firms__lists{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,3vw,40px)}
+.firms p.lead{font-size:clamp(1.2rem,1.7vw,1.4rem);line-height:1.42}
+.firms__cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin-top:26px}
+.firms__direct{margin:18px 0 0;font-family:var(--ui);font-weight:600;font-size:1.0625rem}
+
+/* Who is behind this: the founder gets a record like every trader, and a stack of prints. */
+.who__grid{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:clamp(28px,6vw,88px);align-items:start}
+.who__name{margin:0 0 14px;font-family:var(--ui);font-weight:800;font-size:1.75rem;line-height:1.1}
+.who__name span{font-weight:600;color:var(--ink-2)}
+.record{margin:0 0 22px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.record div{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:12px;padding:10px 0 9px}
+.record div + div{border-top:1px solid rgba(15,27,45,.3)}
+.record dt{font-family:var(--ui);font-weight:600;font-size:1.0625rem;color:var(--ink-2)}
+.record dd{margin:0;font-family:var(--ui);font-weight:700;font-size:1.1875rem;line-height:1.25}
+.who__say{max-width:32em}
+.who__links{display:flex;flex-wrap:wrap;gap:10px 12px;margin-top:22px}
+.stack{width:100%;max-width:400px;justify-self:end}
+.prints{position:relative;list-style:none;margin:10px 20px 0;padding:0;aspect-ratio:4/5}
+.print{position:absolute;inset:0;padding:10px;background:var(--white);border:2px solid var(--ink);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.print img{display:block;width:100%;height:100%;object-fit:cover}
+.print[data-pos="0"]{z-index:4;transform:rotate(-1.5deg)}
+.print[data-pos="1"]{z-index:3;transform:rotate(3deg) translate(10px,4px)}
+.print[data-pos="2"]{z-index:2;transform:rotate(-4.5deg) translate(-8px,8px)}
+.print[data-pos="3"]{z-index:1;transform:rotate(5.5deg) translate(12px,12px)}
+.print[data-pos="4"]{z-index:0;transform:rotate(-2.5deg) translate(-12px,14px)}
+.print.is-leaving{z-index:5;transform:translateX(108%) rotate(13deg)}
+.prints__tap{position:absolute;inset:0;z-index:6;width:100%;padding:0;border:0;background:transparent;cursor:pointer}
+.stack__bar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px 20px 0}
+.stack__n{font-family:var(--ui);font-weight:600;font-size:1.0625rem;color:var(--ink-2)}
+.stack__ctl{display:flex;flex:none;gap:8px}
+.stack__cap{margin:12px 20px 0;min-height:5.4em;font-size:1rem;line-height:1.4;color:var(--ink-2)}
+.stack__cap b{display:block;margin-bottom:2px;font-family:var(--ui);font-weight:800;font-size:1.25rem;line-height:1.2;color:var(--ink)}
+.stack__cap .stamp{margin-left:4px;vertical-align:2px}
+
+.join{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,6vw,88px);align-items:start}
+form{display:grid;gap:18px}
+label.field{display:grid;gap:6px;font-family:var(--ui);font-weight:700;font-size:1.0625rem}
+input[type="email"]{width:100%;font-family:var(--body);font-size:1.125rem;padding:12px 14px;border:2px solid var(--ink);border-radius:3px;background:var(--white);color:var(--ink)}
+fieldset{margin:0;padding:0;border:0;min-width:0}
+legend{padding:0;margin-bottom:8px;font-family:var(--ui);font-weight:700;font-size:1.0625rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative;display:inline-flex}
+.chip input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.chip span{font-family:var(--ui);font-weight:700;font-size:1.0625rem;line-height:1;padding:10px 13px 9px;border:2px solid var(--ink);border-radius:3px;background:transparent}
+.chip input:checked + span{background:var(--ink);color:var(--paper)}
+.chip input:focus-visible + span{outline:3px solid var(--stamp);outline-offset:3px}
+.form__row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
+.form__status{margin:0;font-size:1.0625rem;min-height:1.5em}
+.form__status.is-error{color:var(--out)}
+.form__fine{margin:0;font-size:.9375rem;color:var(--ink-2)}
+
+.faq details{border-top:2px solid var(--ink)}
+.faq details:last-child{border-bottom:2px solid var(--ink)}
+.faq summary{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:16px 0 14px;font-family:var(--ui);font-weight:800;font-size:1.5rem;line-height:1.15;cursor:pointer;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--display);font-weight:800;font-size:1.8rem;line-height:.8}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{margin:0 0 18px;max-width:38em}
+
+footer{margin-top:clamp(64px,10vw,128px);padding-block:28px 44px;border-top:2px solid var(--ink);font-size:.9375rem;color:var(--ink-2)}
+footer .wordmark{font-size:1.6rem;color:var(--ink)}
+.foot{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,9fr);gap:24px clamp(24px,6vw,88px);align-items:start}
+.foot p{margin:0 0 .7em;max-width:52em}
+.foot__links{display:flex;flex-wrap:wrap;gap:6px 22px;margin:0 0 1em;padding:0;list-style:none;font-family:var(--ui);font-weight:700;font-size:1.0625rem;color:var(--ink)}
+
+/* Profile sheet */
+.profile{position:fixed;inset:0;margin:0 0 0 auto;width:min(620px,100vw);max-width:none;height:100%;max-height:none;padding:0;border:0;border-left:2px solid var(--ink);background:var(--paper);color:var(--ink);overflow:auto}
+.profile::backdrop{background:rgba(15,27,45,.55)}
+.profile__in{padding:20px clamp(16px,4vw,32px) 36px}
+.profile__bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px;font-family:var(--ui);font-weight:600;font-size:1rem;color:var(--ink-2)}
+.profile h2{font-size:clamp(2.6rem,8vw,4rem);margin:0 0 10px;overflow-wrap:anywhere}
+.profile__tags{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.profile__style{margin:0 0 4px;font-size:1.1875rem}
+.profile__since{margin:0 0 22px;font-size:1rem;color:var(--ink-2)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:2px solid var(--ink)}
+.stats div{padding:10px 12px 8px}
+.stats div + div{border-left:1px solid var(--ink)}
+.stats dt{font-family:var(--ui);font-weight:600;font-size:.9375rem;color:var(--ink-2)}
+.stats dd{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,5vw,2.2rem);line-height:1.05;font-variant-numeric:tabular-nums}
+.chart{margin:22px 0 6px}
+.chart svg{display:block;width:100%;height:auto}
+.chart text{font-family:var(--ui);font-weight:600;font-size:13px;fill:var(--ink-2)}
+.chart__cap{margin:0 0 22px;font-size:1rem;color:var(--ink-2)}
+.mix{display:flex;height:14px;margin:8px 0 8px;border:2px solid var(--ink)}
+.mix i{display:block}
+.mix i:nth-child(1){background:var(--ink)}
+.mix i:nth-child(2){background:rgba(15,27,45,.55)}
+.mix i:nth-child(3){background:rgba(15,27,45,.22)}
+.mix__key{margin:0 0 24px;font-family:var(--ui);font-weight:600;font-size:1.0625rem}
+.trades{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:1.0625rem;font-variant-numeric:tabular-nums;margin-bottom:22px}
+.trades td{padding:9px 0;border-top:1px solid rgba(15,27,45,.3);vertical-align:top}
+.trades td:first-child{width:4.6em;color:var(--ink-2);white-space:nowrap}
+.trades td:last-child{text-align:right;font-weight:800;white-space:nowrap;padding-left:12px}
+.trades b{font-weight:700}
+.hidden-totals{margin:0 0 22px;padding:14px 16px;border:2px dashed var(--ink-2);font-size:1.0625rem}
+.profile__fine{margin:0;font-size:.9375rem;color:var(--ink-2)}
+
+/* One load moment: the line is drawn, then the stamp lands. */
+@keyframes draw{from{transform:scaleX(0)}}
+@keyframes thunk{from{opacity:0;transform:rotate(-4deg) scale(1.7)}}
+@keyframes slide{from{opacity:0;transform:translateX(28px)}}
+.mini .cut__bar{animation:draw .75s .35s cubic-bezier(.2,.8,.2,1) backwards}
+.mini .stamp--out{animation:thunk .2s 1.15s ease-out backwards}
+.profile[open]{animation:slide .18s ease-out}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .mini .cut__bar,.mini .stamp--out,.profile[open]{animation:none}
+  .print{transition:none}
+}
+
+/* Narrow screens */
+@media (max-width:900px){
+  .hero__grid,.proof,.firms__grid,.join,.who__grid{grid-template-columns:minmax(0,1fr)}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .foot{grid-template-columns:minmax(0,1fr)}
+  .stack{justify-self:start}
+}
+@media (max-width:720px){
+  .top{flex-wrap:wrap}
+  .top > .btn{order:2;margin-left:auto}
+  .top nav{order:3;flex-basis:100%;flex-wrap:wrap;margin-left:0}
+  .top nav a.link{font-size:1.0625rem}
+  .limits .ticks{grid-template-columns:minmax(0,1fr)}
+  .hide-s{display:none}
+  .sheet th,.sheet td{padding-inline:10px}
+  .board__head,.tabs,.board__foot,.cut__label{padding-inline:10px}
+  .tabs__sep{margin-left:4px;padding-left:10px}
+  .duo{grid-template-columns:minmax(0,1fr)}
+  .duo__col{padding-right:0}
+  .duo__col + .duo__col{padding-left:0;border-left:0;border-top:2px solid var(--ink)}
+  .firms__lists{grid-template-columns:minmax(0,1fr)}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats div:nth-child(3){border-left:0}
+  .stats div:nth-child(n+3){border-top:1px solid var(--ink)}
+}
+@media (max-width:520px){
+  .steps{grid-template-columns:minmax(0,1fr)}
+  .who,.big{font-size:1.25rem}
+  .sheet{font-size:1.0625rem}
+}
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="wordmark" href="#top" aria-label="Exile, back to top">Exile</a>
+  <nav aria-label="Main">
+    <a class="link" href="#board">The board</a>
+    <a class="link" href="#season">How it works</a>
+    <a class="link" href="#firms">For firms</a>
+    <a class="link" href="#who">About</a>
+  </nav>
+  <a class="btn btn--small" href="#join">Join the waitlist</a>
+</header>
+
+<main id="top">
+
+<section class="wrap hero">
+  <h1><span>Outside the system.</span><span>On the record.</span></h1>
+  <div class="hero__grid">
+    <div>
+      <p class="lede">Exile is a proving ground for traders who never worked on Wall Street. Link your real accounts, play a season, and earn a verified record that trading firms can read.</p>
+      <div class="hero__cta">
+        <a class="btn" href="#join">Join the waitlist</a>
+        <a class="btn btn--ghost" href="#firms">I hire traders</a>
+      </div>
+      <p class="hero__note">Season Zero is a four week pilot. It opens in January 2027.</p>
+    </div>
+    <div class="mini">
+      <div class="board">
+        <div class="board__head"><span>Pro board, week 4</span><span class="stamp stamp--plain">Sample data</span></div>
+        <table class="sheet" aria-label="Sample Pro board, top of the table">
+          <tbody id="mini-body"></tbody>
+        </table>
+      </div>
+      <a class="mini__more" href="#board">Open the full sample board</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap sec" id="board">
+  <h2>The board</h2>
+  <p class="sec__intro">This is sample data. It shows how a season reads in its last week. Pick any trader to open the record behind the rank.</p>
+  <div class="board">
+    <div class="board__head"><span>Season Zero <small>Jan 4 to Jan 31, 2027</small></span><span class="stamp stamp--plain">Sample data</span></div>
+    <div class="tabs" role="tablist" aria-label="Boards">
+      <button class="tab" role="tab" id="tab-pro" aria-controls="board-panel" aria-selected="true" data-tab="pro">Pro board</button>
+      <span class="tabs__sep" aria-hidden="true">Social</span>
+      <button class="tab" role="tab" id="tab-best" aria-controls="board-panel" aria-selected="false" tabindex="-1" data-tab="best">Best trade</button>
+      <button class="tab" role="tab" id="tab-worst" aria-controls="board-panel" aria-selected="false" tabindex="-1" data-tab="worst">Worst trade</button>
+      <button class="tab" role="tab" id="tab-bold" aria-controls="board-panel" aria-selected="false" tabindex="-1" data-tab="bold">Boldest call</button>
+    </div>
+    <div id="board-panel" role="tabpanel" aria-labelledby="tab-pro">
+      <table class="sheet" id="board-table"></table>
+    </div>
+    <p class="board__foot" id="board-foot"></p>
+  </div>
+  <noscript><p>The sample board needs JavaScript to draw.</p></noscript>
+</section>
+
+<section class="wrap sec" id="season">
+  <h2>How a season works</h2>
+  <p class="sec__intro">Four steps, in this order. Entry is free.</p>
+  <ol class="steps">
+    <li><h3>Link your accounts</h3><p>Stocks and options, crypto, and prediction markets. Exile reads your record. It does not trade for you or hold your money.</p></li>
+    <li><h3>Declare before day one</h3><p>Every account you link counts for the whole season. Nobody gets to show only the one that won.</p></li>
+    <li><h3>Play four weeks</h3><p>Scores update every day. A recap lands every Sunday with the movers, the blowups and the storylines.</p></li>
+    <li><h3>Keep the record</h3><p>Your season becomes a verified record you can show anyone. Top Pro records are built to go in front of trading firms.</p></li>
+  </ol>
+</section>
+
+<section class="wrap sec" id="divisions">
+  <h2>Two divisions</h2>
+  <p class="sec__intro">One is for fun. One is the real test. Both run on real trades.</p>
+  <div class="duo">
+    <div class="duo__col">
+      <h3>Social</h3>
+      <p class="duo__tag">For bragging rights</p>
+      <div class="duo__demo"><span class="stamp stamp--plain">Highlights</span><span class="stamp stamp--ok">Full record</span></div>
+      <ul class="ticks">
+        <li>You choose which trades to post. Every post is verified.</li>
+        <li>Your full record stays private unless you switch it on.</li>
+        <li>Every profile says Highlights or Full record, so a highlight reel can't pass as a track record.</li>
+        <li>Weekly boards crown the best trade, the worst trade and the boldest call.</li>
+      </ul>
+    </div>
+    <div class="duo__col">
+      <h3>Pro</h3>
+      <p class="duo__tag">For the record that counts</p>
+      <div class="duo__demo"><span class="duo__line"></span><span>The line, 15% below your peak</span></div>
+      <ul class="ticks">
+        <li>Every linked account counts, for the whole season.</li>
+        <li>You are ranked on return against your worst drop, so risk control counts as much as profit.</li>
+        <li>Fall 15% from your peak and you are exiled until next season.</li>
+        <li>Scores are in percent. A $2,000 account can beat a $200,000 one, and nobody sees your balance.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="wrap sec" id="verified">
+  <div class="proof">
+    <div>
+      <h2>What verified means</h2>
+      <span class="proof__stamp" aria-hidden="true">Verified</span>
+    </div>
+    <ul class="ticks">
+      <li>Every number comes from the account itself. Screenshots are not accepted.</li>
+      <li>A record starts the day you link. Nothing is backfilled.</li>
+      <li>Results are shown in percent. Your balance stays private.</li>
+      <li>Pro finalists pass an identity and statement check before any firm meets them.</li>
+    </ul>
+  </div>
+  <p class="proof__say">Verified tells you the trades are real. The season tells you whether the trader is any good.</p>
+  <div class="limits" id="limits">
+    <h3>What we can't verify</h3>
+    <ul class="ticks">
+      <li><b>Accounts you never link.</b> We see what you connect. Someone could keep their losses somewhere else. That is why Pro finalists hand over statements before a firm meets them.</li>
+      <li><b>Skill, from four weeks.</b> A season is short. It shows how someone handles risk and losses. It does not prove they will keep winning.</li>
+      <li><b>Who is behind a wallet.</b> A crypto wallet proves control, not identity. Finalists pass an identity check.</li>
+      <li><b>Why a trade was made.</b> We record what happened, not the thinking behind it. That is what a firm's interview is for.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="firms" id="firms">
+  <div class="wrap firms__grid">
+    <div>
+      <h2>For trading firms</h2>
+      <p class="lead">Trading contests test puzzles and simulated markets. Exile shows you what a person did with real money across a full season, including what they did after a loss.</p>
+      <div class="firms__cta">
+        <a class="btn btn--paper" href="report.html">See a sample scouting report</a>
+        <a class="btn btn--line" href="#join-firm">Talk to us about the pilot</a>
+      </div>
+      <p class="firms__direct">Or go direct: <span data-contact="Exile pilot: firm conversation"></span></p>
+    </div>
+    <div class="firms__lists">
+      <div>
+        <h3>What you get</h3>
+        <ul class="ticks">
+          <li>A ranked list of the top Pro finishers.</li>
+          <li>A scouting report on each one: sizing, risk control, and what they did after a loss.</li>
+          <li>Each record in full: every linked account, every trade, the whole season.</li>
+          <li>Identity and statements checked before you meet anyone.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>What we ask</h3>
+        <ul class="ticks">
+          <li>For the pilot, one thing: read the reports on the top five finishers, and talk to anyone who stands out.</li>
+          <li>There is no fee for the pilot season.</li>
+          <li>Tell us which markets you hire for, and we will weight the board toward them.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap sec" id="who">
+  <div class="who__grid">
+    <div>
+      <h2>Who is behind this</h2>
+      <p class="who__name">Everett Rosauer <span>founder</span></p>
+      <dl class="record">
+        <div><dt>School</dt><dd>Lafayette College, economics</dd></div>
+        <div><dt>Last job</dt><dd>Financial analysis intern at Primergy, summer 2026</dd></div>
+        <div><dt>Home</dt><dd>Mill Valley, California</dd></div>
+        <div><dt>Holes in one</dt><dd>1, with a signed flag to prove it</dd></div>
+      </dl>
+      <p class="who__say">I started Exile because a screenshot proves nothing. Good traders outside Wall Street have no record anyone trusts, and firms have no clean way to find them. Season Zero is the first test of that idea. If you hire traders, or you want a spot in the pilot, message me.</p>
+      <div class="who__links">
+        <a class="btn btn--ghost btn--small" href="https://www.linkedin.com/in/everett-rosauer-70479b1b5/" rel="noopener">Everett on LinkedIn</a>
+      </div>
+    </div>
+    <div class="stack" id="stack">
+      <ol class="prints" aria-label="Photos of Everett">
+        <li class="print" data-pos="0"><img src="img/everett-0.jpg" width="640" height="800" loading="lazy" alt="Headshot of Everett Rosauer in a navy blazer and a light blue shirt"></li>
+        <li class="print" data-pos="1"><img src="img/everett-1.jpg" width="760" height="950" loading="lazy" alt="Everett Rosauer on a golf green at sunset, holding a white flag that reads hole in one"></li>
+        <li class="print" data-pos="2"><img src="img/everett-2.jpg" width="760" height="950" loading="lazy" alt="Everett teeing off with a wall of mountains behind the course"></li>
+        <li class="print" data-pos="3"><img src="img/everett-3.jpg" width="760" height="950" loading="lazy" alt="Everett on a ridge trail, looking across at a mountain"></li>
+        <li class="print" data-pos="4"><img src="img/everett-4.jpg" width="760" height="950" loading="lazy" alt="Everett on a grassy hilltop above a river valley and snowy peaks"></li>
+        <li aria-hidden="true"><button class="prints__tap" type="button" id="stack-tap" tabindex="-1"></button></li>
+      </ol>
+      <div class="stack__bar">
+        <span class="stack__n" id="stack-n"></span>
+        <div class="stack__ctl">
+          <button class="btn btn--ghost btn--small" type="button" id="stack-back">Back</button>
+          <button class="btn btn--ghost btn--small" type="button" id="stack-next">Next<span class="sr"> photo</span></button>
+        </div>
+      </div>
+      <p class="stack__cap" id="stack-cap" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap sec" id="join">
+  <div class="join">
+    <div>
+      <h2>Get a spot in Season Zero</h2>
+      <p>The pilot is small. Leave your email and we will write before it opens.</p>
+      <p>Hiring traders? Pick Trading firm and we will write to set up a call.</p>
+    </div>
+    <form id="waitlist" novalidate>
+      <label class="field" for="wl-email">Email
+        <input type="email" id="wl-email" name="email" autocomplete="email" placeholder="name@school.edu" required>
+      </label>
+      <fieldset>
+        <legend>I am a</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" id="wl-role-trader" name="role" value="trader" checked><span>Trader</span></label>
+          <label class="chip"><input type="radio" id="wl-role-firm" name="role" value="firm"><span>Trading firm</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Markets I care about</legend>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" id="wl-m-stocks" name="markets" value="stocks"><span>Stocks and options</span></label>
+          <label class="chip"><input type="checkbox" id="wl-m-crypto" name="markets" value="crypto"><span>Crypto</span></label>
+          <label class="chip"><input type="checkbox" id="wl-m-pred" name="markets" value="prediction"><span>Prediction markets</span></label>
+        </div>
+      </fieldset>
+      <div class="sr" aria-hidden="true"><label for="wl-hp">Leave this box empty</label><input type="text" id="wl-hp" name="website" tabindex="-1" autocomplete="off"></div>
+      <div class="form__row">
+        <button class="btn" type="submit" id="wl-submit">Join the waitlist</button>
+      </div>
+      <p class="form__status" id="wl-status" role="status" aria-live="polite"></p>
+      <p class="form__fine">We use your email to write to you about Exile and for nothing else. <a href="privacy.html">How we handle it</a>.</p>
+    </form>
+  </div>
+</section>
+
+<section class="wrap sec faq" id="faq">
+  <h2>Questions</h2>
+  <details><summary>Can Exile trade in my account?</summary><p>No. Exile reads your record. It does not place trades, move money or hold funds.</p></details>
+  <details><summary>Does anyone see my balance?</summary><p>No. Everything on Exile is shown in percent.</p></details>
+  <details><summary>What does exiled mean?</summary><p>On the Pro board, falling 15% from your peak ends your season. You can come back when the next one starts.</p></details>
+  <details><summary>Which markets count?</summary><p>Stocks and options, crypto, and prediction markets. One profile holds all of them.</p></details>
+  <details><summary>What does it cost?</summary><p>Nothing. Entry is free for traders.</p></details>
+  <details><summary>Is this investment advice?</summary><p>No. Exile keeps score. It does not tell anyone what to trade, and a high rank is not a recommendation to copy anyone.</p></details>
+  <details><summary>Who can play?</summary><p>The pilot is for adults 18 and over in the United States.</p></details>
+  <details><summary>Where are the full rules?</summary><p>On the <a href="rules.html">Season Zero rules page</a>. They cover scoring, fair play and what top finishers receive.</p></details>
+  <details><summary>Who runs Exile?</summary><p>Everett Rosauer, an economics student at Lafayette College. See <a href="#who">who is behind this</a>.</p></details>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div><span class="wordmark">Exile</span></div>
+    <div>
+      <ul class="foot__links">
+        <li><a href="rules.html">Rules</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms</a></li>
+        <li><a href="report.html">Sample scouting report</a></li>
+      </ul>
+      <p>Exile is not a broker, an exchange or an investment adviser. Nothing on this site is investment advice. Trading involves risk, and most traders lose money.</p>
+      <p>The board and the profiles on this page are sample data. They are not real people or real results.</p>
+      <p>Contact: <span data-contact="Exile"></span>. &copy; 2026 Exile.</p>
+    </div>
+  </div>
+</footer>
+
+<dialog class="profile" id="profile" aria-labelledby="profile-name">
+  <div class="profile__in" id="profile-in"></div>
+</dialog>
+
+<script src="config.js"></script>
+<script>
+/* Settings shared by every page (contact, LinkedIn, waitlist) live in config.js. */
+
+/* Sample season. Every stat on the board is computed from these curves,
+   so the numbers always agree with the chart. Index 100 = season start. */
+const LINE = 15;
+const TRADERS = [
+  {h:"ridgeline", style:"Prediction markets first, crypto second. Small size, many positions.", mix:[["Prediction markets",62],["Crypto",30],["Stocks",8]], trades:84, win:58,
+   curve:[100,99.3,99,97.4,97,96.7,97.9,97,97.8,95.9,96.5,98.3,98.4,97.1,99.5,99.6,102.1,104,105,104.5,105.9,105.6,106.5,108.3,110.4,110.7,113.3,115.1,114.8],
+   recent:[["Jan 29","Inflation print at or under 2.9%: Yes","Prediction",54],["Jan 27","ETH spot, two day hold","Crypto",6.2],["Jan 26","Fed holds in January: Yes","Prediction",11],["Jan 22","Weekly jobless claims over 230K: No","Prediction",-100]]},
+  {h:"halfkelly", style:"Crypto perps with fixed fractional sizing.", mix:[["Crypto",71],["Options",21],["Prediction markets",8]], trades:61, win:49,
+   curve:[100,101.9,105.2,102.4,101.9,102.9,107.1,104.7,105.4,103.6,105.5,106.5,107.4,107.8,112.3,115.2,116.1,118.1,122.2,120.1,120.9,129.6,133,130.1,127.7,124.2,124.3,123.5,123],
+   recent:[["Jan 29","BTC perp short","Crypto",-14],["Jan 25","SOL perp long","Crypto",96],["Jan 24","COIN weekly call","Options",41],["Jan 21","ETH perp long","Crypto",-22]]},
+  {h:"coldopen", style:"Economic data markets. Trades the release and is flat by the close.", mix:[["Prediction markets",80],["Stocks",20]], trades:37, win:62,
+   curve:[100,99.1,99.3,100,100.7,100.4,101.8,101.6,101.3,100,102,101.6,101.8,100.7,102.1,102,101.6,103.3,106.1,107.9,109.5,109.6,110.1,111.2,112.6,112.5,109.3,108.5,109.6],
+   recent:[["Jan 29","GDP growth over 2.5%: No","Prediction",-100],["Jan 22","Jobs report under 50K: Yes, bought at 6 cents","Prediction",1567],["Jan 20","Retail sales beat: Yes","Prediction",38],["Jan 14","SPY shares, into the print","Stocks",1.1]]},
+  {h:"basis_pt", style:"Index option spreads. Defined risk on every trade.", mix:[["Options",74],["Stocks",26]], trades:52, win:55,
+   curve:[100,102,102.6,101.2,100.7,99.2,100.1,98.4,100.3,101.6,104.8,104.6,104.9,104.3,103.1,101.3,98.6,98.9,98.9,100.8,100.8,102.3,103.9,106.9,109.6,110,109.6,110.1,111.1],
+   recent:[["Jan 28","SPX put credit spread","Options",18],["Jan 27","QQQ call debit spread","Options",44],["Jan 21","SPX iron condor","Options",-63],["Jan 19","IWM shares","Stocks",2.4]]},
+  {h:"tapewyrm", style:"Short dated options on momentum names. Big swings both ways.", mix:[["Options",88],["Crypto",12]], trades:119, win:41,
+   curve:[100,98.8,96.4,96.8,99.4,99.9,102.1,101.2,102.7,108.2,106.4,104.8,105.1,107.1,110.7,112.2,115.7,109.1,113,115.5,118.3,121.7,125.5,126.8,132.7,127.9,126.1,118.8,117.3],
+   recent:[["Jan 30","NVDA weekly call","Options",-100],["Jan 29","TSLA weekly put","Options",-71],["Jan 27","TSLA weekly put","Options",188],["Jan 26","GME weekly call, far out of the money","Options",940]]},
+  {h:"mossback", style:"Large cap shares, held for days.", mix:[["Stocks",90],["Options",10]], trades:18, win:50,
+   curve:[100,98.4,98.1,99.8,99.9,99.5,99.6,97.1,96.5,99,98.6,98.3,100,101.2,101.8,104.1,105.4,107.3,105.5,106,105,104.2,102.9,103.4,103.5,103.4,102.8,102.5,103],
+   recent:[["Jan 27","MSFT shares","Stocks",-1.8],["Jan 20","AMZN shares","Stocks",4.9],["Jan 13","JPM shares","Stocks",3.2]]},
+  {h:"secondlook", style:"Earnings week options.", mix:[["Options",65],["Stocks",35]], trades:44, win:43,
+   curve:[100,98.2,97.5,99,95.4,95.9,96.5,97.4,97,96.4,99.5,96.3,95.9,99.2,101.1,103,102.9,101.8,98.3,100.4,99.7,98.8,98.6,97.6,97.7,97.6,95.9,97.3,97.5],
+   recent:[["Jan 28","META earnings straddle","Options",23],["Jan 27","MSFT earnings call","Options",-100],["Jan 21","NFLX earnings put","Options",-58]]},
+  {h:"driftwood", style:"Rate and inflation markets, held to settlement.", mix:[["Prediction markets",70],["Crypto",30]], trades:29, win:38,
+   curve:[100,97.6,99.5,98.8,101.4,94.8,94,95.3,96.2,95.3,94.1,93.5,95.1,95.8,97.1,96.8,96.8,95.7,95.2,95.9,96.1,93.9,93.3,91.3,91.9,92.3,92.1,93.3,92.9],
+   recent:[["Jan 27","Rate cut in January: Yes","Prediction",-100],["Jan 26","BTC spot","Crypto",3.4],["Jan 14","Inflation print over 3.1%: Yes","Prediction",-100]]},
+  {h:"lowfloat", style:"Small cap shares and the odd lottery call.", mix:[["Stocks",60],["Options",40]], trades:73, win:36,
+   curve:[100,97.4,96.2,95.9,95,96.4,97.7,98.5,100.9,102.6,97.1,96.7,93,92.8,90,95.1,92.7,93.1,93.3,94.3,92.6,91.7,91.7,92.6,93.2,91.9,91,89.4,88.7],
+   recent:[["Jan 29","Small cap biotech shares, held into data","Stocks",-38],["Jan 28","IWM weekly call","Options",-100],["Jan 18","Small cap shipping shares","Stocks",21]]},
+  {h:"nightshift", style:"Overnight crypto perps.", mix:[["Crypto",100]], trades:96, win:44,
+   curve:[100,100.8,101.1,102.8,105.9,109.1,106.1,109.2,113.4,114.2,107.2,104.3,109.4,108.3,107.1,100.8,100.3,99.9,101,100.2,98,100.1,99.2,96.9],
+   recent:[["Jan 26","ETH perp long, overnight","Crypto",-31],["Jan 24","SOL perp long","Crypto",-18],["Jan 18","BTC perp short","Crypto",-44]]},
+  {h:"pinrisk", style:"Sells options into expiry.", mix:[["Options",100]], trades:58, win:71,
+   curve:[100,98.6,98.4,97,100.6,99.5,100,101.4,105.6,107.2,113.2,109.3,103.9,103.7,103.2,100.9,94.9],
+   recent:[["Jan 19","Short AMD weekly put, assigned","Options",-100],["Jan 15","Short SPY strangle","Options",-240],["Jan 13","Short QQQ call spread","Options",62]]},
+  {h:"gammaghost", style:"Same day index options, full size.", mix:[["Options",100]], trades:41, win:39,
+   curve:[100,104.5,110.8,117.1,122.1,134,129.6,118,116.9,107.4],
+   recent:[["Jan 12","SPY same day calls","Options",-100],["Jan 10","SPX same day puts","Options",-83],["Jan 8","SPY same day calls","Options",310]]}
+];
+
+/* Social division. Single trade boards. Highlights traders show posts only. */
+const HIGHLIGHTS = {
+  moonmath:{style:"Posts options wins."},
+  kessler_run:{style:"Weather and economic data markets."},
+  tiltproof:{style:"Crypto perps, mostly at night."}
+};
+const SOCIAL = {
+  best:[["moonmath","NVDA weekly call","Options",412],["tapewyrm","TSLA weekly put","Options",188],["halfkelly","SOL perp long","Crypto",96],["kessler_run","Fed holds in January: Yes","Prediction",61],["ridgeline","Inflation print at or under 2.9%: Yes","Prediction",54]],
+  worst:[["pinrisk","Short SPY strangle","Options",-240],["gammaghost","SPY same day calls","Options",-100],["tiltproof","BTC perp long, liquidated","Crypto",-100],["driftwood","Rate cut in January: Yes","Prediction",-100],["lowfloat","Small cap biotech shares, held into data","Stocks",-38]],
+  bold:[["coldopen","Jobs report under 50K: Yes, bought at 6 cents","Prediction",1567],["kessler_run","Ten inches of snow in New York in January: Yes, bought at 8 cents","Prediction",1150],["tapewyrm","GME weekly call, far out of the money","Options",940],["basis_pt","QQQ call bought the morning of the Fed","Options",733],["moonmath","New token bought on its first day","Crypto",610]]
+};
+const FOOT = {
+  pro:"Score is season return divided by the worst drop from peak. Risk control counts as much as profit. The bar shows how close each trader is to the line right now.",
+  best:"Best single trade posted this week. A Highlights profile shows only the trades its owner chose to post.",
+  worst:"Worst single trade posted this week. Traders post these by choice.",
+  bold:"Biggest payoff from a long shot this week."
+};
+
+/* ---------- maths ---------- */
+function stat(t){
+  let peak = t.curve[0], maxdd = 0;
+  for (const v of t.curve){ peak = Math.max(peak, v); maxdd = Math.max(maxdd, (1 - v/peak)*100); }
+  const last = t.curve[t.curve.length-1];
+  const out = t.curve.length < 29;
+  return {ret:last-100, maxdd, nowdd:(1-last/peak)*100, out, day:t.curve.length-1, score:(last-100)/Math.max(maxdd,1)};
+}
+TRADERS.forEach(t => t.s = stat(t));
+const ACTIVE = TRADERS.filter(t => !t.s.out).sort((a,b) => b.s.score - a.s.score);
+const OUT = TRADERS.filter(t => t.s.out).sort((a,b) => b.s.day - a.s.day);
+ACTIVE.forEach((t,i) => t.rank = i+1);
+const byHandle = Object.fromEntries(TRADERS.map(t => [t.h, t]));
+
+const M = "−";
+const pct = (x,d=1) => (x<0?M:"+") + Math.abs(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}) + "%";
+const sc = x => (x<0?M:"+") + Math.abs(x).toFixed(2);
+const cls = x => x<0 ? "neg" : "pos";
+const dayLabel = d => "Jan " + (3+d);
+const markets = t => t.mix.map(m => m[0]).join(", ").replace(/^./, c => c.toUpperCase()).replace(/, (.)/g, (m,c) => ", " + c.toLowerCase());
+
+/* ---------- board ---------- */
+function proRow(t, i, compact){
+  const s = t.s;
+  const alt = i % 2 ? " row--alt" : "";
+  if (s.out){
+    return `<tr class="row row--out" data-h="${t.h}">
+      <td class="rank">${M}</td>
+      <td><button class="who" type="button" data-h="${t.h}">${t.h}</button>${compact ? "" : `<span class="sub">${markets(t)}</span>`}</td>
+      <td class="num">${pct(s.ret)}</td>
+      ${compact ? "" : `<td class="num hide-s">${pct(-s.maxdd)}</td>`}
+      <td class="num" ${compact ? "" : 'colspan="2"'}><span class="stamp stamp--out">Exiled</span>${compact ? "" : ` <span class="hide-s">&nbsp;${dayLabel(s.day)}</span>`}</td>
+    </tr>`;
+  }
+  const left = Math.max(0, LINE - s.nowdd);
+  const fill = Math.min(100, s.nowdd / LINE * 100);
+  return `<tr class="row${alt}" data-h="${t.h}">
+    <td class="rank">${t.rank}</td>
+    <td><button class="who" type="button" data-h="${t.h}">${t.h}</button>${compact ? "" : `<span class="sub">${markets(t)}</span>`}</td>
+    <td class="num big ${cls(s.ret)}">${pct(s.ret)}</td>
+    ${compact ? "" : `<td class="num hide-s">${pct(-s.maxdd)}</td>`}
+    <td class="num big">${sc(s.score)}</td>
+    ${compact ? "" : `<td class="num hide-s"><span class="gauge${fill>=75?" gauge--hot":""}" aria-hidden="true"><i style="width:${fill.toFixed(0)}%"></i></span>${left.toFixed(1)} pts</td>`}
+  </tr>`;
+}
+const cutRow = span => `<tr class="cut"><td colspan="${span}"><div class="cut__bar"></div><div class="cut__label"><b>The line</b><span>Fall 15% from your peak and your season ends</span></div></td></tr>`;
+
+function renderPro(){
+  return `<thead><tr><th scope="col"><span class="sr">Rank</span></th><th scope="col">Trader</th><th scope="col" class="num">Return</th><th scope="col" class="num hide-s">Worst drop</th><th scope="col" class="num">Score</th><th scope="col" class="num hide-s">Room to the line</th></tr></thead>
+  <tbody>${ACTIVE.map((t,i) => proRow(t,i,false)).join("")}${cutRow(6)}${OUT.map((t,i) => proRow(t,i,false)).join("")}</tbody>`;
+}
+function renderSocial(key){
+  const rows = SOCIAL[key].map((r,i) => {
+    const [h, what, mkt, res] = r;
+    const full = !!byHandle[h];
+    return `<tr class="row${i%2?" row--alt":""}" data-h="${h}">
+      <td class="rank">${i+1}</td>
+      <td><button class="who" type="button" data-h="${h}">${h}</button><span class="sub">${what}</span></td>
+      <td class="hide-s">${mkt}</td>
+      <td class="num big ${cls(res)}">${pct(res,0)}</td>
+      <td class="num hide-s"><span class="stamp ${full?"stamp--ok":"stamp--plain"}">${full?"Full record":"Highlights"}</span></td>
+    </tr>`;
+  }).join("");
+  return `<thead><tr><th scope="col"><span class="sr">Rank</span></th><th scope="col">Trader and trade</th><th scope="col" class="hide-s">Market</th><th scope="col" class="num">Result</th><th scope="col" class="num hide-s">Profile</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+const table = document.getElementById("board-table");
+const foot = document.getElementById("board-foot");
+const panel = document.getElementById("board-panel");
+const tabs = [...document.querySelectorAll(".tab")];
+function showTab(key, focus){
+  tabs.forEach(b => { const on = b.dataset.tab === key; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
+  table.innerHTML = key === "pro" ? renderPro() : renderSocial(key);
+  table.setAttribute("aria-label", key === "pro" ? "Sample Pro board" : "Sample Social board");
+  foot.textContent = FOOT[key];
+  panel.setAttribute("aria-labelledby", "tab-" + key);
+}
+tabs.forEach((b,i) => {
+  b.addEventListener("click", () => showTab(b.dataset.tab));
+  b.addEventListener("keydown", e => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    e.preventDefault();
+    const n = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length-1)) % tabs.length];
+    showTab(n.dataset.tab, true);
+  });
+});
+showTab("pro");
+
+document.getElementById("mini-body").innerHTML =
+  ACTIVE.slice(0,3).map((t,i) => proRow(t,i,true)).join("") + cutRow(4) + proRow(OUT[OUT.length-1],0,true);
+
+/* ---------- profile ---------- */
+function chart(t){
+  const W=Math.max(300,Math.min(560,(window.innerWidth||560)-36)),H=230,l=44,r=20,top=16,b=28, c=t.curve;
+  const thr=[]; let pk=c[0];
+  for (const v of c){ pk=Math.max(pk,v); thr.push(pk*(1-LINE/100)); }
+  const lo=Math.min(...c,...thr), hi=Math.max(...c);
+  const step=(hi-lo)>36?20:10;
+  const y0=Math.floor((lo-2)/step)*step, y1=Math.ceil((hi+2)/step)*step;
+  const X=d=>l+(W-l-r)*d/28, Y=v=>top+(H-top-b)*(1-(v-y0)/(y1-y0));
+  const line=c.map((v,d)=>(d?"L":"M")+X(d).toFixed(1)+" "+Y(v).toFixed(1)).join(" ");
+  const area=line+` L${X(c.length-1).toFixed(1)} ${Y(y0).toFixed(1)} L${X(0)} ${Y(y0).toFixed(1)} Z`;
+  let tp="";
+  thr.forEach((v,d)=>{ tp += d ? ` H${X(d).toFixed(1)} V${Y(v).toFixed(1)}` : `M${X(0)} ${Y(v).toFixed(1)}`; });
+  let grid="";
+  for (let v=y0; v<=y1; v+=step){
+    grid += `<line x1="${l}" x2="${W-r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#0F1B2D" stroke-opacity="${v===100?.55:.13}" stroke-width="1"/>`;
+    grid += `<text x="${l-8}" y="${Y(v)+4}" text-anchor="end">${v===100?"Start":pct(v-100,0)}</text>`;
+  }
+  let weeks="";
+  [7,14,21,28].forEach((d,i)=>{ weeks += `<text x="${X(d)}" y="${H-8}" text-anchor="end">Week ${i+1}</text>`; });
+  const ex=X(c.length-1), ey=Y(c[c.length-1]), out=t.s.out;
+  const tight = ex + 104 > W;
+  const endLabel = out ? `<text x="${tight?ex-10:ex+10}" y="${tight?ey+20:ey+4}" text-anchor="${tight?"end":"start"}" style="fill:#C9271B;font-weight:800">Exiled ${dayLabel(t.s.day)}</text>` : "";
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Season curve for ${t.h}. Return ${pct(t.s.ret)}, worst drop ${t.s.maxdd.toFixed(1)}%.">
+    ${grid}${weeks}
+    <path d="${area}" fill="#0F1B2D" fill-opacity=".07"/>
+    <path d="${tp}" fill="none" stroke="#C9271B" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="${X(0)+6}" y="${Y(thr[0])+15}" style="fill:#C9271B;font-weight:800">The line</text>
+    <path d="${line}" fill="none" stroke="#0F1B2D" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${ex}" cy="${ey}" r="5" fill="${out?"#C9271B":"#0F1B2D"}" stroke="#F0F2EE" stroke-width="2"/>
+    ${endLabel}
+  </svg>`;
+}
+const tradeRows = list => list.map(([d,what,mkt,res]) => `<tr><td>${d}</td><td><b>${what}</b><span class="sub">${mkt}</span></td><td class="${cls(res)}">${pct(res,0)}</td></tr>`).join("");
+
+function profileHTML(h){
+  const close = `<div class="profile__bar"><span>Sample trader</span><button class="btn btn--ghost btn--small" type="button" id="profile-close">Close</button></div>`;
+  const fine = `<p class="profile__fine">This is a sample trader made for this page. Not a real person or real results.</p>`;
+  const t = byHandle[h];
+  if (!t){
+    const posts = [];
+    for (const k of ["best","worst","bold"]) SOCIAL[k].forEach(r => { if (r[0]===h) posts.push(["Jan "+(k==="best"?28:k==="worst"?27:25), r[1], r[2], r[3]]); });
+    return `${close}<h2 id="profile-name">${h}</h2>
+      <div class="profile__tags"><span class="stamp stamp--plain">Highlights</span></div>
+      <p class="profile__style">${HIGHLIGHTS[h].style}</p>
+      <p class="profile__since">Linked Jan 4, 2027. Posts are verified one trade at a time.</p>
+      <p class="hidden-totals"><b>Totals are hidden.</b> This trader shares highlights, not a full record. Exile shows no return, win rate or rank for a Highlights profile.</p>
+      <h3>Posted trades</h3>
+      <table class="trades"><tbody>${tradeRows(posts)}</tbody></table>${fine}`;
+  }
+  const s = t.s;
+  const tags = `<span class="stamp stamp--ok">Full record</span>` + (s.out ? `<span class="stamp stamp--out">Exiled ${dayLabel(s.day)}</span>` : "");
+  const cap = s.out
+    ? `Fell ${s.nowdd.toFixed(1)}% from the peak on ${dayLabel(s.day)} and crossed the line. The season ended there, ${s.ret>=0?"while still up":"down"} ${Math.abs(s.ret).toFixed(1)}% overall.`
+    : `The red line trails 15% below the highest point so far. Right now this trader has ${(LINE-s.nowdd).toFixed(1)} points of room.`;
+  return `${close}<h2 id="profile-name">${h}</h2>
+    <div class="profile__tags">${tags}</div>
+    <p class="profile__style">${t.style}</p>
+    <p class="profile__since">Record starts Jan 4, 2027. Nothing is backfilled.</p>
+    <dl class="stats">
+      <div><dt>Return</dt><dd class="${cls(s.ret)}">${pct(s.ret)}</dd></div>
+      <div><dt>Worst drop</dt><dd>${pct(-s.maxdd)}</dd></div>
+      <div><dt>${s.out?"Lasted":"Score"}</dt><dd>${s.out ? s.day+" days" : sc(s.score)}</dd></div>
+      <div><dt>Win rate</dt><dd>${t.win}%</dd></div>
+    </dl>
+    <div class="chart">${chart(t)}</div>
+    <p class="chart__cap">${cap}</p>
+    <h3>Where the trades were</h3>
+    <div class="mix" aria-hidden="true">${t.mix.map(m => `<i style="width:${m[1]}%"></i>`).join("")}</div>
+    <p class="mix__key">${t.mix.map(m => m[0]+" "+m[1]+"%").join(", ")}. ${t.trades} trades this season.</p>
+    <h3>Latest verified trades</h3>
+    <table class="trades"><tbody>${tradeRows(t.recent)}</tbody></table>${fine}`;
+}
+
+const dlg = document.getElementById("profile");
+const dlgIn = document.getElementById("profile-in");
+let opener = null;
+function openProfile(h, from){
+  opener = from || null;
+  dlgIn.innerHTML = profileHTML(h);
+  dlg.scrollTop = 0;
+  if (typeof dlg.showModal === "function") { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute("open","");
+  document.getElementById("profile-close").focus();
+}
+function closeProfile(){ if (typeof dlg.close === "function") dlg.close(); else dlg.removeAttribute("open"); }
+dlg.addEventListener("close", () => { if (opener && document.contains(opener)) opener.focus(); });
+dlg.addEventListener("click", e => {
+  if (e.target.id === "profile-close") return closeProfile();
+  const r = dlg.getBoundingClientRect();
+  if (e.target === dlg && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) closeProfile();
+});
+document.addEventListener("click", e => {
+  if (dlg.contains(e.target)) return;
+  const row = e.target.closest("tr.row");
+  if (!row) return;
+  openProfile(row.dataset.h, row.querySelector(".who"));
+});
+
+/* ---------- photo stack ---------- */
+const PHOTOS = [
+  {t:"Everett Rosauer", c:"The official one. The next few are more accurate."},
+  {t:"Hole in one", v:true, c:"Hole 11 at Solmar Golf Links, Cabo San Lucas. 119 yards with a 52 degree wedge, December 29, 2025. The head pro signed the flag."},
+  {t:"Queenstown, New Zealand", c:"April 2026."},
+  {t:"Above Queenstown", c:"April 2026."},
+  {t:"Near Glenorchy, New Zealand", c:"April 2026."}
+];
+const prints = [...document.querySelectorAll(".print")];
+const capEl = document.getElementById("stack-cap");
+const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let order = prints.map((_,i) => i);   /* order[0] is the print on top */
+let turning = false;
+function layStack(){
+  order.forEach((p,pos) => prints[p].dataset.pos = pos);
+  const p = PHOTOS[order[0]];
+  capEl.innerHTML = `<b>${p.t}${p.v ? ' <span class="stamp stamp--ok">Verified</span>' : ""}</b>${p.c}`;
+  document.getElementById("stack-n").textContent = `Photo ${order[0]+1} of ${PHOTOS.length}`;
+}
+function turn(dir){
+  if (turning) return;
+  if (dir < 0){ order.unshift(order.pop()); layStack(); return; }
+  const top = prints[order[0]];
+  const land = () => { order.push(order.shift()); top.classList.remove("is-leaving"); layStack(); turning = false; };
+  if (still) return land();
+  turning = true;
+  top.classList.add("is-leaving");
+  setTimeout(land, 250);
+}
+document.getElementById("stack-next").addEventListener("click", () => turn(1));
+document.getElementById("stack-back").addEventListener("click", () => turn(-1));
+document.getElementById("stack-tap").addEventListener("click", () => turn(1));
+layStack();
+
+/* ---------- waitlist ---------- */
+const form = document.getElementById("waitlist");
+const statusEl = document.getElementById("wl-status");
+const emailEl = document.getElementById("wl-email");
+const submitEl = document.getElementById("wl-submit");
+const FRAMED = window.self !== window.top;   /* true inside a preview frame, where outside requests are blocked */
+function say(html, bad){ statusEl.innerHTML = html; statusEl.classList.toggle("is-error", !!bad); }
+function syncRole(){ submitEl.textContent = form.role.value === "firm" ? "Ask for a call" : "Join the waitlist"; }
+form.addEventListener("change", syncRole);
+
+/* "Talk to us about the pilot" lands on the form with Trading firm already picked. */
+function firmMode(){
+  document.getElementById("wl-role-firm").checked = true;
+  syncRole();
+  document.getElementById("join").scrollIntoView({behavior: still ? "auto" : "smooth"});
+  emailEl.focus({preventScroll:true});
+}
+document.querySelectorAll('a[href="#join-firm"]').forEach(a => a.addEventListener("click", e => { e.preventDefault(); firmMode(); }));
+if (location.hash === "#join-firm") firmMode();
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const email = emailEl.value.trim().toLowerCase();
+  if (email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ say("Enter an email address, like name@school.edu.", true); emailEl.focus(); return; }
+  const role = form.role.value;
+  const done = role === "firm" ? "Got it. We will write to you about the pilot." : "You're on the list. We will email you before Season Zero opens.";
+  if (document.getElementById("wl-hp").value){ form.reset(); syncRole(); say(done); return; }   /* a bot filled the hidden box */
+  const data = {email, role, markets: [...form.querySelectorAll('input[name="markets"]:checked')].map(i => i.value)};
+  const wl = window.EXILE.waitlist;
+  submitEl.disabled = true;
+  say("Saving.");
+  try {
+    const res = await fetch(wl.url, {method:"POST", headers:{"Content-Type":"application/json", "apikey":wl.key, "Prefer":"return=minimal"}, body:JSON.stringify(data)});
+    if (res.status === 409){ form.reset(); syncRole(); say("That email is already on the list. You're set."); return; }
+    if (!res.ok) throw new Error(String(res.status));
+    form.reset(); syncRole();
+    say(done);
+  } catch (err) {
+    say(FRAMED
+      ? "This private preview can't reach the list, so nothing was saved. The form works on the live site."
+      : `That did not go through, so nothing was saved. Try again, or message ${window.EXILE.contactHTML("Season Zero waitlist")}.`, true);
+  } finally { submitEl.disabled = false; }
+});
+</script>
+</body>
+</html>
