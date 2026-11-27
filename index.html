@@ -167,13 +167,14 @@ p{margin:0 0 1em}
 .prints{position:relative;list-style:none;margin:10px 20px 0;padding:0;aspect-ratio:4/5}
 .print{position:absolute;inset:0;padding:10px;background:var(--white);border:2px solid var(--ink);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
 .print img{display:block;width:100%;height:100%;object-fit:cover}
-.print[data-pos="0"]{z-index:4;transform:rotate(-1.5deg)}
-.print[data-pos="1"]{z-index:3;transform:rotate(3deg) translate(10px,4px)}
-.print[data-pos="2"]{z-index:2;transform:rotate(-4.5deg) translate(-8px,8px)}
-.print[data-pos="3"]{z-index:1;transform:rotate(5.5deg) translate(12px,12px)}
-.print[data-pos="4"]{z-index:0;transform:rotate(-2.5deg) translate(-12px,14px)}
-.print.is-leaving{z-index:5;transform:translateX(108%) rotate(13deg)}
-.prints__tap{position:absolute;inset:0;z-index:6;width:100%;padding:0;border:0;background:transparent;cursor:pointer}
+.print[data-pos="0"]{z-index:5;transform:rotate(-1.5deg)}
+.print[data-pos="1"]{z-index:4;transform:rotate(3deg) translate(10px,4px)}
+.print[data-pos="2"]{z-index:3;transform:rotate(-4.5deg) translate(-8px,8px)}
+.print[data-pos="3"]{z-index:2;transform:rotate(5.5deg) translate(12px,12px)}
+.print[data-pos="4"]{z-index:1;transform:rotate(-2.5deg) translate(-12px,14px)}
+.print[data-pos="5"]{z-index:0;transform:rotate(2deg) translate(4px,16px)}
+.print.is-leaving{z-index:6;transform:translateX(108%) rotate(13deg)}
+.prints__tap{position:absolute;inset:0;z-index:7;width:100%;padding:0;border:0;background:transparent;cursor:pointer}
 .stack__bar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:32px 20px 0}
 .stack__n{font-family:var(--ui);font-weight:600;font-size:1.0625rem;color:var(--ink-2)}
 .stack__ctl{display:flex;flex:none;gap:8px}
@@ -454,9 +455,13 @@ footer .wordmark{font-size:1.6rem;color:var(--ink)}
         <div><dt>School</dt><dd>Lafayette College, economics</dd></div>
         <div><dt>Last job</dt><dd>Financial analysis intern at Primergy, summer 2026</dd></div>
         <div><dt>Home</dt><dd>Mill Valley, California</dd></div>
-        <div><dt>Holes in one</dt><dd>1, with a signed flag to prove it</dd></div>
+        <div><dt>Holes in one</dt><dd>1, signed off by the head pro</dd></div>
       </dl>
-      <p class="who__say">I started Exile because a screenshot proves nothing. Good traders outside Wall Street have no record anyone trusts, and firms have no clean way to find them. Season Zero is the first test of that idea. If you hire traders, or you want a spot in the pilot, message me.</p>
+      <div class="who__say">
+        <p>I started Exile because I wanted a place where traders could post real trades and a full record of everything they trade, from stocks to crypto to prediction markets, and get noticed for it.</p>
+        <p>Right now a record means nothing. Anyone can post a screenshot, hide the losses, or show only the account that won. Real skill gets lost in the noise, and the firms that hire traders have no clean way to find it. Exile reads the record straight from the account, so what you see is what happened.</p>
+        <p>If you hire traders, or you want a spot in the pilot, message me.</p>
+      </div>
       <div class="who__links">
         <a class="btn btn--ghost btn--small" href="https://www.linkedin.com/in/everett-rosauer-70479b1b5/" rel="noopener">Everett on LinkedIn</a>
       </div>
@@ -467,7 +472,8 @@ footer .wordmark{font-size:1.6rem;color:var(--ink)}
         <li class="print" data-pos="1"><img src="img/everett-1.jpg" width="760" height="950" loading="lazy" alt="Everett Rosauer on a golf green at sunset, holding a white flag that reads hole in one"></li>
         <li class="print" data-pos="2"><img src="img/everett-2.jpg" width="760" height="950" loading="lazy" alt="Everett teeing off with a wall of mountains behind the course"></li>
         <li class="print" data-pos="3"><img src="img/everett-3.jpg" width="760" height="950" loading="lazy" alt="Everett on a ridge trail, looking across at a mountain"></li>
-        <li class="print" data-pos="4"><img src="img/everett-4.jpg" width="760" height="950" loading="lazy" alt="Everett on a grassy hilltop above a river valley and snowy peaks"></li>
+        <li class="print" data-pos="4"><img src="img/everett-5.jpg" width="760" height="950" loading="lazy" alt="Everett wakesurfing behind a boat on a mountain lake, wearing a blue life vest"></li>
+        <li class="print" data-pos="5"><img src="img/everett-6.jpg" width="760" height="950" loading="lazy" alt="Everett in a helmet on a blue dirt bike in a pine forest"></li>
         <li aria-hidden="true"><button class="prints__tap" type="button" id="stack-tap" tabindex="-1"></button></li>
       </ol>
       <div class="stack__bar">
@@ -523,7 +529,7 @@ footer .wordmark{font-size:1.6rem;color:var(--ink)}
   <details><summary>Can Exile trade in my account?</summary><p>No. Exile reads your record. It does not place trades, move money or hold funds.</p></details>
   <details><summary>Does anyone see my balance?</summary><p>No. Everything on Exile is shown in percent.</p></details>
   <details><summary>What does exiled mean?</summary><p>On the Pro board, falling 15% from your peak ends your season. You can come back when the next one starts.</p></details>
-  <details><summary>Which markets count?</summary><p>Stocks and options, crypto, and prediction markets. One profile holds all of them.</p></details>
+  <details><summary>Which markets count?</summary><p>Stocks and options, crypto, and prediction markets. One profile holds all of them. Prediction market trades on sports do not count.</p></details>
   <details><summary>What does it cost?</summary><p>Nothing. Entry is free for traders.</p></details>
   <details><summary>Is this investment advice?</summary><p>No. Exile keeps score. It does not tell anyone what to trade, and a high rank is not a recommendation to copy anyone.</p></details>
   <details><summary>Who can play?</summary><p>The pilot is for adults 18 and over in the United States.</p></details>
@@ -813,7 +819,8 @@ const PHOTOS = [
   {t:"Hole in one", v:true, c:"Hole 11 at Solmar Golf Links, Cabo San Lucas. 119 yards with a 52 degree wedge, December 29, 2025. The head pro signed the flag."},
   {t:"Queenstown, New Zealand", c:"April 2026."},
   {t:"Above Queenstown", c:"April 2026."},
-  {t:"Near Glenorchy, New Zealand", c:"April 2026."}
+  {t:"Wakesurfing", c:"Behind the boat."},
+  {t:"Dirt bike", c:"In the pines."}
 ];
 const prints = [...document.querySelectorAll(".print")];
 const capEl = document.getElementById("stack-cap");
