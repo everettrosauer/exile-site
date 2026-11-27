@@ -18,3 +18,39 @@
 .doc .short{margin:0 0 8px;padding:clamp(16px,2.4vw,24px);border:1.5px solid var(--rule);border-radius:18px;background:var(--raise)}
 .doc .short h2{margin:0 0 .5em;padding:0;border:0}
 .doc .short ul{margin:0}
+
+/* Account: sign in and edit your profile */
+.acct{max-width:46em}
+.acct__head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px 24px;margin-bottom:6px}
+.acct__head h1{margin:0}
+.acct form{margin-top:clamp(18px,2.6vw,28px)}
+.photo{display:flex;flex-wrap:wrap;align-items:center;gap:16px 22px}
+.photo__ctl{display:grid;gap:10px;justify-items:start}
+.photo__ctl .form__fine{max-width:26em}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
+.filebtn:focus-within{outline:3px solid var(--accent);outline-offset:3px}
+.handle{display:flex;align-items:stretch}
+.handle span{display:flex;align-items:center;padding:0 12px;border:1.5px solid var(--rule-soft);border-right:0;border-radius:12px 0 0 12px;background:var(--bg);font-weight:500;font-size:.9375rem;letter-spacing:0;text-transform:none;color:var(--mute);white-space:nowrap}
+.handle input{border-radius:0 12px 12px 0 !important;min-width:0}
+.danger{margin-top:clamp(28px,4vw,44px);padding-top:20px;border-top:1px solid var(--rule-soft)}
+.danger p{color:var(--mute);font-size:.9375rem}
+.btn--danger{background:transparent;border-color:var(--neg);color:var(--neg)}
+.btn--danger:hover{background:var(--neg);border-color:var(--neg);color:#fff;box-shadow:none}
+
+/* Public trader profile */
+.tp{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(18px,3.4vw,44px);align-items:center}
+.tp h1{margin:0 0 6px;font-size:clamp(2.6rem,7.4vw,5.4rem);line-height:.9;text-transform:none;overflow-wrap:anywhere}
+.tp__handle{margin:0 0 14px;font-weight:600;color:var(--mute)}
+.tp__tags{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 16px}
+.tp__headline{margin:0;font-size:clamp(1.1rem,1.6vw,1.35rem);line-height:1.4;max-width:34em}
+.tp__links{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-top:20px}
+.tp__mkts{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.tp__mkts li{font-weight:600;font-size:.875rem;line-height:1;padding:9px 13px 8px;border:1.5px solid var(--rule-soft);border-radius:999px}
+.tp2{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(20px,4vw,56px);align-items:start}
+.tp2 h2{font-family:var(--ui);font-weight:700;font-size:1.25rem;line-height:1.2;text-transform:none;letter-spacing:0;margin:0 0 .6em}
+.about{white-space:pre-wrap;overflow-wrap:anywhere;max-width:40em}
+.report-link{margin:22px 0 0;font-size:.875rem;color:var(--mute)}
+@media (max-width:760px){
+  .tp,.tp2{grid-template-columns:minmax(0,1fr)}
+}

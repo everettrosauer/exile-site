@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trader profile | Exile</title>
+<meta name="description" content="A trader profile on Exile. Profiles are written by the trader. No account is linked yet, so nothing here is verified.">
+<meta property="og:title" content="Trader profile | Exile">
+<meta property="og:description" content="A trader profile on Exile. No account linked yet.">
+<meta property="og:image" content="https://www.joinexile.com/og.png">
+<meta name="theme-color" content="#070C16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230F1B2D'/%3E%3Crect x='6' y='9' width='14' height='5' fill='%23F0F2EE'/%3E%3Crect x='6' y='19' width='26' height='5' fill='%23C9271B'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__exileReveal)document.documentElement.classList.remove("js")},2500);</script>
+<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/pages.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top__in">
+    <a class="wordmark" href="/" aria-label="Exile, home">Exile</a>
+    <nav aria-label="Main">
+      <a class="link" href="/#board">The board</a>
+      <a class="link" href="/#roster">Traders</a>
+      <a class="link" href="/#who">About</a>
+    </nav>
+    <a class="btn btn--small" href="/account">My profile</a>
+  </div>
+</header>
+
+<main>
+<section class="brick tone-dark page is-in" id="hero">
+  <p class="lead" id="state">Loading profile.</p>
+  <noscript><p class="lead">Profiles need JavaScript. Turn it on and reload this page.</p></noscript>
+  <div class="tp" id="tp" hidden>
+    <div class="avatar avatar--xl" id="tp-avatar" aria-hidden="true"></div>
+    <div>
+      <h1 id="tp-name"></h1>
+      <p class="tp__handle" id="tp-handle"></p>
+      <div class="tp__tags"><span class="stamp stamp--plain">Profile only</span><span class="stamp stamp--plain">No account linked yet</span></div>
+      <p class="tp__headline" id="tp-headline"></p>
+      <div class="tp__links">
+        <a class="btn btn--ghost btn--small" id="tp-linkedin" rel="noopener nofollow" hidden>LinkedIn</a>
+        <ul class="tp__mkts" id="tp-mkts" aria-label="Markets"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="brick tone-paper2" id="more" hidden>
+  <div class="tp2">
+    <div>
+      <h2>About me</h2>
+      <p class="about" id="tp-about"></p>
+    </div>
+    <div class="box box--dash">
+      <h2>Record</h2>
+      <p>No record yet. A record starts the day an account links, and linking opens with Season Zero, planned for Jan 4, 2027.</p>
+      <p style="margin:0">Everything on this page was written by the trader. Exile has not checked it.</p>
+    </div>
+  </div>
+  <p class="report-link">Something wrong with this profile? <a id="tp-report">Report it</a>. Is this you? <a href="/account">Edit your profile</a>.</p>
+</section>
+</main>
+
+<footer>
+  <div class="foot">
+    <div><a class="wordmark" href="/">Exile</a></div>
+    <div>
+      <ul class="foot__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/rules">Rules</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+      </ul>
+      <p>Exile is not a broker, an exchange or an investment adviser. Nothing on this site is investment advice. A profile is not a recommendation to copy anyone.</p>
+      <p>Contact: <span data-contact="Exile profile"><a href="mailto:hello@joinexile.com">hello@joinexile.com</a></span>. &copy; 2026 Exile.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/config.js"></script>
+<script src="/site.js"></script>
+<script>
+/* A public profile. Read only. Everything the trader wrote is placed with textContent, never as HTML. */
+(function(){
+  const cfg = window.EXILE.supabase, $ = id => document.getElementById(id);
+  const state = $("state");
+  const m = location.pathname.match(/^\/t\/([A-Za-z0-9_]{3,20})\/?$/);
+  const handle = ((m && m[1]) || new URLSearchParams(location.search).get("h") || "").toLowerCase();
+  const MK = {stocks:"Stocks and options", crypto:"Crypto", prediction:"Prediction markets"};
+  const fail = text => { state.textContent = text; state.hidden = false; };
+  if (!/^[a-z0-9_]{3,20}$/.test(handle)) return fail("No profile at this address.");
+
+  fetch(cfg.url + "/rest/v1/profiles?select=handle,display_name,headline,about,linkedin_url,markets,avatar_path&handle=eq." + encodeURIComponent(handle) + "&limit=1", {headers:{apikey: cfg.key}})
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(rows => {
+      const p = rows[0];
+      if (!p) return fail("No profile called " + handle + ". It may have been renamed or deleted.");
+      document.title = p.display_name + " | Exile";
+      $("tp-name").textContent = p.display_name;
+      $("tp-handle").textContent = "@" + p.handle;
+      $("tp-headline").textContent = p.headline || "";
+      $("tp-headline").hidden = !p.headline;
+      const av = $("tp-avatar");
+      if (p.avatar_path && /^[0-9a-f-]{36}\/[0-9]{10,14}\.jpg$/.test(p.avatar_path)){
+        const img = new Image(); img.alt = ""; img.src = cfg.url + "/storage/v1/object/public/avatars/" + p.avatar_path; av.appendChild(img);
+      } else av.textContent = p.display_name.trim().split(/\s+/).slice(0, 2).map(w => w[0] || "").join("") || "?";
+      const li = $("tp-linkedin");
+      if (p.linkedin_url && /^https:\/\/(www\.)?linkedin\.com\/in\/[A-Za-z0-9_%-]{3,100}\/?$/.test(p.linkedin_url)){ li.href = p.linkedin_url; li.hidden = false; }
+      (p.markets || []).forEach(k => { if (MK[k]){ const el = document.createElement("li"); el.textContent = MK[k]; $("tp-mkts").appendChild(el); } });
+      $("tp-about").textContent = p.about || "This trader has not written an about me yet.";
+      $("tp-report").href = "mailto:" + window.EXILE.contactEmail + "?subject=" + encodeURIComponent("Report profile: " + p.handle);
+      state.hidden = true; $("tp").hidden = false; $("more").hidden = false;
+    })
+    .catch(() => fail(window.self !== window.top ? "This preview cannot load profiles. They work on the live site." : "This profile could not be loaded. Check your connection and reload."));
+})();
+</script>
+</body>
+</html>

@@ -268,3 +268,25 @@ form.addEventListener("submit", async e => {
       : `That did not go through, so nothing was saved. Try again, or message ${window.EXILE.contactHTML("Season Zero waitlist")}.`, true);
   } finally { submitEl.disabled = false; }
 });
+
+/* ---------- traders: real profiles, shown once approved ---------- */
+(async function(){
+  const list = document.getElementById("people"), empty = document.getElementById("people-empty"), sbc = window.EXILE.supabase;
+  if (!list || !sbc || FRAMED) return;
+  try {
+    const r = await fetch(sbc.url + "/rest/v1/profiles?select=handle,display_name,headline,avatar_path&listed=is.true&order=created_at.desc&limit=12", {headers:{apikey: sbc.key}});
+    if (!r.ok) return;
+    const rows = await r.json();
+    if (!Array.isArray(rows) || !rows.length) return;
+    for (const p of rows){
+      if (!/^[a-z0-9_]{3,20}$/.test(p.handle)) continue;
+      const li = document.createElement("li"), a = document.createElement("a"), av = document.createElement("span"), tx = document.createElement("span"), b = document.createElement("b"), sub = document.createElement("span");
+      a.className = "person"; a.href = "/t/" + p.handle; av.className = "avatar";
+      if (p.avatar_path && /^[0-9a-f-]{36}\/[0-9]{10,14}\.jpg$/.test(p.avatar_path)){ const img = new Image(); img.alt = ""; img.loading = "lazy"; img.src = sbc.url + "/storage/v1/object/public/avatars/" + p.avatar_path; av.appendChild(img); }
+      else av.textContent = String(p.display_name || "?").trim().split(/\s+/).slice(0, 2).map(w => w[0] || "").join("");
+      b.textContent = p.display_name; sub.textContent = p.headline || "@" + p.handle;   /* text only, never HTML */
+      tx.append(b, sub); a.append(av, tx); li.appendChild(a); list.appendChild(li);
+    }
+    if (list.children.length){ list.hidden = false; empty.hidden = true; }
+  } catch (_) { /* the empty note stays */ }
+})();

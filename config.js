@@ -8,7 +8,11 @@
                  (catch-all on joinexile.com). Receiving only, no sending.
    linkedin      The founder's public profile.
    waitlist      Where the signup form saves. The key is a publishable key:
-                 it can add a row to the waitlist and nothing else.
+                 on its own it can add a row to the waitlist and read public
+                 profiles, and nothing else.
+   supabase      The same project, for sign in and trader profiles. What a
+                 signed in person may change is enforced in the database:
+                 only their own profile row and their own photo.
 ------------------------------------------------------------------- */
 window.EXILE = {
   contactEmail: "hello@joinexile.com",
@@ -16,6 +20,10 @@ window.EXILE = {
   linkedin: "https://www.linkedin.com/in/everett-rosauer-70479b1b5/",
   waitlist: {
     url: "https://vyjgpqpinjgxgyseasdq.supabase.co/rest/v1/waitlist",
+    key: "sb_publishable_oVHFGG3GlPmlSsQB_kwXAw_SFSaccyR"
+  },
+  supabase: {
+    url: "https://vyjgpqpinjgxgyseasdq.supabase.co",
     key: "sb_publishable_oVHFGG3GlPmlSsQB_kwXAw_SFSaccyR"
   }
 };

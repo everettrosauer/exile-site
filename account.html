@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your profile | Exile</title>
+<meta name="description" content="Make or edit your Exile trader profile.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#070C16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230F1B2D'/%3E%3Crect x='6' y='9' width='14' height='5' fill='%23F0F2EE'/%3E%3Crect x='6' y='19' width='26' height='5' fill='%23C9271B'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__exileReveal)document.documentElement.classList.remove("js")},2500);</script>
+<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/pages.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top__in">
+    <a class="wordmark" href="/" aria-label="Exile, home">Exile</a>
+    <nav aria-label="Main">
+      <a class="link" href="/#board">The board</a>
+      <a class="link" href="/#roster">Traders</a>
+      <a class="link" href="/#who">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="brick tone-paper2 page is-in">
+  <div class="acct">
+
+    <p class="lead" id="view-load">Loading.</p>
+    <noscript><p class="lead">Profiles need JavaScript. Turn it on and reload this page.</p></noscript>
+
+    <!-- Signed out -->
+    <div id="view-out" hidden>
+      <h1>Your profile</h1>
+      <p class="lead">Add a short bio, an about me, your LinkedIn and a photo. Your profile is public. Nothing on it is verified until accounts link in Season Zero.</p>
+      <div class="seg" role="group" aria-label="Create an account or sign in">
+        <button type="button" id="mode-up" aria-pressed="true">Create account</button>
+        <button type="button" id="mode-in" aria-pressed="false">Sign in</button>
+      </div>
+      <form id="auth" novalidate>
+        <label class="field" for="au-email">Email
+          <input type="email" id="au-email" autocomplete="email" placeholder="you@email.com" required>
+        </label>
+        <label class="field" for="au-pass">Password
+          <input type="password" id="au-pass" autocomplete="new-password" minlength="8" required>
+        </label>
+        <label class="check" id="au-adult-row"><input type="checkbox" id="au-adult"><span>I am 18 or older, and I agree to the <a href="/terms">terms</a> and the <a href="/privacy">privacy page</a>.</span></label>
+        <div class="form__row"><button class="btn" type="submit" id="au-submit">Create account</button></div>
+        <p class="form__status" id="au-status" role="status" aria-live="polite"></p>
+        <p class="form__fine" id="au-fine">Use at least 8 characters. Forgot your password? Write to <a href="mailto:hello@joinexile.com?subject=Password%20reset">hello@joinexile.com</a> from the email on your account.</p>
+      </form>
+    </div>
+
+    <!-- Signed in -->
+    <div id="view-in" hidden>
+      <div class="acct__head">
+        <h1>Edit your profile</h1>
+        <div class="actions">
+          <a class="btn btn--ghost btn--small" id="view-link" hidden>View my profile</a>
+          <button class="btn btn--ghost btn--small" type="button" id="signout">Sign out</button>
+        </div>
+      </div>
+      <p class="lead" id="who-line"></p>
+
+      <form id="editor" novalidate>
+        <div class="photo">
+          <div class="avatar avatar--xl" id="ed-avatar" aria-hidden="true"></div>
+          <div class="photo__ctl">
+            <div class="actions">
+              <label class="btn btn--ghost btn--small filebtn">Choose a photo<input type="file" id="ed-file" accept="image/*"></label>
+              <button class="btn btn--ghost btn--small" type="button" id="ed-nophoto" hidden>Remove photo</button>
+            </div>
+            <p class="form__fine">Optional. It is cropped to a square and shrunk before it leaves your device, which also strips the location data a phone adds.</p>
+          </div>
+        </div>
+
+        <label class="field" for="ed-name">Name
+          <input type="text" id="ed-name" autocomplete="name" maxlength="60" required>
+        </label>
+
+        <label class="field" for="ed-handle">Handle
+          <span class="handle"><span>joinexile.com/t/</span><input type="text" id="ed-handle" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="20" required></span>
+        </label>
+        <p class="form__fine" style="margin-top:-10px">3 to 20 characters: small letters, numbers and underscores.</p>
+
+        <label class="field" for="ed-headline">Short bio <span class="count" id="ed-headline-n"></span>
+          <input type="text" id="ed-headline" maxlength="120" placeholder="What you trade, in one line">
+        </label>
+
+        <label class="field" for="ed-about">About me <span class="count" id="ed-about-n"></span>
+          <textarea id="ed-about" maxlength="1500" placeholder="How you got into trading, what you focus on, what you are working toward."></textarea>
+        </label>
+
+        <label class="field" for="ed-linkedin">LinkedIn
+          <input type="url" id="ed-linkedin" inputmode="url" autocapitalize="none" spellcheck="false" placeholder="linkedin.com/in/yourname">
+        </label>
+
+        <fieldset>
+          <legend>Markets I trade</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="markets" value="stocks"><span>Stocks and options</span></label>
+            <label class="chip"><input type="checkbox" name="markets" value="crypto"><span>Crypto</span></label>
+            <label class="chip"><input type="checkbox" name="markets" value="prediction"><span>Prediction markets</span></label>
+          </div>
+        </fieldset>
+
+        <div class="form__row"><button class="btn" type="submit" id="ed-save">Save profile</button></div>
+        <p class="form__status" id="ed-status" role="status" aria-live="polite"></p>
+        <p class="form__fine">Your profile shows a "no account linked yet" tag until linking opens. It appears on the home page once it has been approved. Do not post anything you would not want public.</p>
+      </form>
+
+      <div class="danger" id="danger" hidden>
+        <p>Deleting removes your profile and your photo from the site right away. Your sign in stays, so you can make a new profile later. To remove your sign in too, write to <a href="mailto:hello@joinexile.com?subject=Delete%20my%20account">hello@joinexile.com</a>.</p>
+        <div class="actions">
+          <button class="btn btn--danger btn--small" type="button" id="del-ask">Delete my profile</button>
+          <button class="btn btn--danger btn--small" type="button" id="del-yes" hidden>Yes, delete it</button>
+          <button class="btn btn--ghost btn--small" type="button" id="del-no" hidden>Keep it</button>
+        </div>
+        <p class="form__status" id="del-status" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="foot">
+    <div><a class="wordmark" href="/">Exile</a></div>
+    <div>
+      <ul class="foot__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/rules">Rules</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+      </ul>
+      <p>Exile is not a broker, an exchange or an investment adviser. Nothing on this site is investment advice.</p>
+      <p>Contact: <span data-contact="Exile profile"><a href="mailto:hello@joinexile.com">hello@joinexile.com</a></span>. &copy; 2026 Exile.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/config.js"></script>
+<script src="/site.js"></script>
+<script src="/vendor/supabase-2.119.2.js"></script>
+<script src="/account.js"></script>
+</body>
+</html>
