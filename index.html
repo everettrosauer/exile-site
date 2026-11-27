@@ -497,7 +497,7 @@ footer .wordmark{font-size:1.6rem;color:var(--ink)}
     </div>
     <form id="waitlist" novalidate>
       <label class="field" for="wl-email">Email
-        <input type="email" id="wl-email" name="email" autocomplete="email" placeholder="name@school.edu" required>
+        <input type="email" id="wl-email" name="email" autocomplete="email" placeholder="you@email.com" required>
       </label>
       <fieldset>
         <legend>I am a</legend>
@@ -871,7 +871,7 @@ if (location.hash === "#join-firm") firmMode();
 form.addEventListener("submit", async e => {
   e.preventDefault();
   const email = emailEl.value.trim().toLowerCase();
-  if (email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ say("Enter an email address, like name@school.edu.", true); emailEl.focus(); return; }
+  if (email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ say("Enter a full email address, like you@email.com.", true); emailEl.focus(); return; }
   const role = form.role.value;
   const done = role === "firm" ? "Got it. We will write to you about the pilot." : "You're on the list. We will email you before Season Zero opens.";
   if (document.getElementById("wl-hp").value){ form.reset(); syncRole(); say(done); return; }   /* a bot filled the hidden box */
