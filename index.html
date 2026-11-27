@@ -35,6 +35,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none !important}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.125rem;line-height:1.5;-webkit-font-smoothing:antialiased}
 img,svg{max-width:100%}
@@ -463,6 +464,7 @@ footer .wordmark{font-size:1.6rem;color:var(--ink)}
         <p>If you hire traders, or you want a spot in the pilot, message me.</p>
       </div>
       <div class="who__links">
+        <a class="btn btn--ghost btn--small" id="founder-mail" hidden></a>
         <a class="btn btn--ghost btn--small" href="https://www.linkedin.com/in/everett-rosauer-70479b1b5/" rel="noopener">Everett on LinkedIn</a>
       </div>
     </div>
@@ -847,6 +849,14 @@ document.getElementById("stack-next").addEventListener("click", () => turn(1));
 document.getElementById("stack-back").addEventListener("click", () => turn(-1));
 document.getElementById("stack-tap").addEventListener("click", () => turn(1));
 layStack();
+
+/* ---------- founder email button ---------- */
+const founderMail = document.getElementById("founder-mail");
+if (window.EXILE.founderEmail){
+  founderMail.href = "mailto:" + window.EXILE.founderEmail + "?subject=" + encodeURIComponent("Exile");
+  founderMail.textContent = window.EXILE.founderEmail;
+  founderMail.hidden = false;
+}
 
 /* ---------- waitlist ---------- */
 const form = document.getElementById("waitlist");

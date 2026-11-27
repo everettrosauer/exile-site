@@ -1,14 +1,18 @@
 /* ------------------------------------------------------------------
    One place for the settings every page shares.
 
-   contactEmail  Leave empty until the mailbox really works. While it is
-                 empty, every contact spot points to LinkedIn instead.
+   contactEmail  The public contact address. If it is ever emptied, every
+                 contact spot points to LinkedIn instead.
+   founderEmail  Shown as a button in "Who is behind this". Empty hides it.
+                 Both addresses forward to Everett's inbox through ImprovMX
+                 (catch-all on joinexile.com). Receiving only, no sending.
    linkedin      The founder's public profile.
    waitlist      Where the signup form saves. The key is a publishable key:
                  it can add a row to the waitlist and nothing else.
 ------------------------------------------------------------------- */
 window.EXILE = {
-  contactEmail: "",
+  contactEmail: "hello@joinexile.com",
+  founderEmail: "everett@joinexile.com",
   linkedin: "https://www.linkedin.com/in/everett-rosauer-70479b1b5/",
   waitlist: {
     url: "https://vyjgpqpinjgxgyseasdq.supabase.co/rest/v1/waitlist",
