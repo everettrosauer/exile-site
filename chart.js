@@ -8,6 +8,7 @@
      start:  Date.UTC(2027, 0, 3),     the day of values[0]
      ranges: [{key:"1M", label:"1M", days:28, say:"past month"}, ...],
      range:  "1M",                     range shown first
+     years:  false,                    optional: leave the year off the labels of a long record
      line:   15,                       optional: draw the Exile line this many percent under the peak
      out:    true                      optional: the record ended at the line, so the last point is drawn red
    }) */
@@ -23,7 +24,7 @@
 
   function mount(el, opt){
     const vals = opt.values, n = vals.length, id = "rc" + (++uid);
-    const longRecord = n > 200;
+    const longRecord = n > 200 && opt.years !== false;
     const dateAt = (i, year) => { const d = new Date(opt.start + i * DAY); return MONTHS[d.getUTCMonth()] + " " + d.getUTCDate() + (year ? ", " + d.getUTCFullYear() : ""); };
     const since = i => (vals[i] / vals[0] - 1) * 100;
 

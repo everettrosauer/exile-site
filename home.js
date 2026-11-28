@@ -1,14 +1,9 @@
-/* Home page. Settings shared by every page (contact, LinkedIn, waitlist) live in config.js. */
+/* Home page. Settings shared by every page (contact, LinkedIn, the profile database) live in config.js. */
 
-/* The sample traders, the year long record and the Social boards live in data.js,
-   so this page and the sample report always show the same numbers. Index 100 = season start. */
-const {LINE, DAY0, TRADERS, YEAR, HIGHLIGHTS, SOCIAL} = window.EXILE_SAMPLE;
-const FOOT = {
-  pro:"Score is season return divided by the worst drop from peak. Risk control counts as much as profit. The bar shows how close each trader is to the line right now.",
-  best:"Best single trade posted this week. A Highlights profile shows only the trades its owner chose to post.",
-  worst:"Worst single trade posted this week. Traders post these by choice.",
-  bold:"Biggest payoff from a long shot this week."
-};
+/* The sample traders and the year long record live in data.js,
+   so this page and the sample report always show the same numbers. Index 100 = the start of the sample month. */
+const {LINE, DAY0, TRADERS, YEAR} = window.EXILE_SAMPLE;
+const TOP = 5;   /* ranks shown before "show the rest" */
 
 /* ---------- maths ---------- */
 function stat(t){
@@ -34,7 +29,7 @@ const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ---------- hero: one record, a year in ---------- */
 ExileChart.mount(document.getElementById("hero-chart"), {
-  values: YEAR, start: DAY0, range: "1Y",
+  values: YEAR, start: DAY0, range: "1Y", years: false,
   ranges: [
     {key:"1W", label:"1W", days:7, say:"past week"},
     {key:"1M", label:"1M", days:28, say:"past month"},
@@ -58,7 +53,7 @@ function proRow(t, i, n){
   }
   const left = Math.max(0, LINE - s.nowdd);
   const fill = Math.min(100, s.nowdd / LINE * 100);
-  return `<tr class="row" data-h="${t.h}" style="--n:${n}">
+  return `<tr class="row${t.rank > TOP ? " row--more" : ""}" data-h="${t.h}" style="--n:${Math.min(n, TOP + 1)}"${t.rank > TOP ? " hidden" : ""}>
     <td class="rank">${t.rank}</td>
     <td><button class="who" type="button" data-h="${t.h}">${t.h}</button><span class="sub">${markets(t)}</span></td>
     <td class="num big ${cls(s.ret)}">${pct(s.ret)}</td>
@@ -67,55 +62,31 @@ function proRow(t, i, n){
     <td class="num hide-s"><span class="gauge${fill>=75?" gauge--hot":""}" aria-hidden="true"><i style="width:${fill.toFixed(0)}%"></i></span>${left.toFixed(1)} pts</td>
   </tr>`;
 }
-const cutRow = (span, n) => `<tr class="cut" style="--n:${n}"><td colspan="${span}"><div class="cut__bar"></div><div class="cut__label"><b>The line</b><span>Fall 15% from your peak and your season ends</span></div></td></tr>`;
+const cutRow = (span, n) => `<tr class="cut" style="--n:${n}"><td colspan="${span}"><div class="cut__bar"></div><div class="cut__label"><b>The line</b><span>Fall 15% from your peak and you are off the board until next month</span></div></td></tr>`;
 
-function renderPro(){
-  const a = ACTIVE.length;
+/* Top ranks first. One row opens the rest, then the line, then the exiled. */
+function renderBoard(){
+  const a = ACTIVE.length, rest = a - TOP;
+  const more = rest > 0 ? `<tr class="more" style="--n:${TOP}"><td colspan="6"><button type="button" id="board-more">Show ranks ${TOP + 1} to ${a}</button></td></tr>` : "";
   return `<thead><tr><th scope="col"><span class="sr">Rank</span></th><th scope="col">Trader</th><th scope="col" class="num">Return</th><th scope="col" class="num hide-s">Worst drop</th><th scope="col" class="num">Score</th><th scope="col" class="num hide-s">Room to the line</th></tr></thead>
-  <tbody>${ACTIVE.map((t,i) => proRow(t,i,i)).join("")}${cutRow(6,a)}${OUT.map((t,i) => proRow(t,i,a+1+i)).join("")}</tbody>`;
+  <tbody>${ACTIVE.map((t,i) => proRow(t,i,i)).join("")}${more}${cutRow(6,TOP+2)}${OUT.map((t,i) => proRow(t,i,TOP+3+i)).join("")}</tbody>`;
 }
-function renderSocial(key){
-  const rows = SOCIAL[key].map((r,i) => {
-    const [h, what, mkt, res] = r;
-    const full = !!byHandle[h];
-    return `<tr class="row" data-h="${h}" style="--n:${i}">
-      <td class="rank">${i+1}</td>
-      <td><button class="who" type="button" data-h="${h}">${h}</button><span class="sub">${what}</span></td>
-      <td class="hide-s">${mkt}</td>
-      <td class="num big ${cls(res)}">${pct(res,0)}</td>
-      <td class="num hide-s"><span class="stamp ${full?"stamp--ok":"stamp--plain"}">${full?"Full record":"Highlights"}</span></td>
-    </tr>`;
-  }).join("");
-  return `<thead><tr><th scope="col"><span class="sr">Rank</span></th><th scope="col">Trader and trade</th><th scope="col" class="hide-s">Market</th><th scope="col" class="num">Result</th><th scope="col" class="num hide-s">Profile</th></tr></thead><tbody>${rows}</tbody>`;
-}
-
 const table = document.getElementById("board-table");
-const foot = document.getElementById("board-foot");
-const panel = document.getElementById("board-panel");
-const tabs = [...document.querySelectorAll(".tab")];
-function showTab(key, focus){
-  tabs.forEach(b => { const on = b.dataset.tab === key; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
-  table.innerHTML = key === "pro" ? renderPro() : renderSocial(key);
-  table.setAttribute("aria-label", key === "pro" ? "Sample Pro board" : "Sample Social board");
-  foot.textContent = FOOT[key];
-  panel.setAttribute("aria-labelledby", "tab-" + key);
-}
-tabs.forEach((b,i) => {
-  b.addEventListener("click", () => showTab(b.dataset.tab));
-  b.addEventListener("keydown", e => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-    e.preventDefault();
-    const n = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length-1)) % tabs.length];
-    showTab(n.dataset.tab, true);
-  });
+table.innerHTML = renderBoard();
+table.addEventListener("click", e => {
+  if (e.target.id !== "board-more") return;
+  const rows = [...table.querySelectorAll(".row--more")];
+  rows.forEach(r => { r.hidden = false; });
+  e.target.closest("tr").remove();
+  const first = rows[0] && rows[0].querySelector(".who");
+  if (first) first.focus();
 });
-showTab("pro");
 
 /* ---------- profile ---------- */
-const SEASON_RANGES = [
+const MONTH_RANGES = [
   {key:"1W", label:"1W", days:7, say:"past week"},
   {key:"2W", label:"2W", days:14, say:"past two weeks"},
-  {key:"S", label:"Season", days:999, say:"this season"}
+  {key:"M", label:"Month", days:999, say:"this month"}
 ];
 const tradeRows = list => list.map(([d,what,mkt,res]) => `<tr><td>${d}</td><td><b>${what}</b><span class="sub">${mkt}</span></td><td class="${cls(res)}">${pct(res, Math.abs(res) < 10 && res % 1 ? 1 : 0)}</td></tr>`).join("");
 
@@ -123,26 +94,15 @@ function profileHTML(h){
   const close = `<div class="profile__bar"><span class="cap">Sample trader</span><button class="btn btn--ghost btn--small" type="button" id="profile-close">Close</button></div>`;
   const fine = `<p class="profile__fine">This is a sample trader made for this page. Not a real person or real results.</p>`;
   const t = byHandle[h];
-  if (!t){
-    const posts = [];
-    for (const k of ["best","worst","bold"]) SOCIAL[k].forEach(r => { if (r[0]===h) posts.push(["Jan "+(k==="best"?28:k==="worst"?27:25), r[1], r[2], r[3]]); });
-    return `${close}<h2 id="profile-name">${h}</h2>
-      <div class="profile__tags"><span class="stamp stamp--plain">Highlights</span></div>
-      <p class="profile__style">${HIGHLIGHTS[h].style}</p>
-      <p class="profile__since">Linked Jan 4, 2027. Posts are verified one trade at a time.</p>
-      <p class="hidden-totals"><b>Totals are hidden.</b> This trader shares highlights, not a full record. Exile shows no return, win rate or rank for a Highlights profile.</p>
-      <h3>Posted trades</h3>
-      <table class="trades"><tbody>${tradeRows(posts)}</tbody></table>${fine}`;
-  }
   const s = t.s;
-  const tags = `<span class="stamp stamp--ok">Full record</span>` + (s.out ? `<span class="stamp stamp--out">Exiled ${dayLabel(s.day)}</span>` : "");
+  const tags = s.out ? `<div class="profile__tags"><span class="stamp stamp--out">Exiled ${dayLabel(s.day)}</span></div>` : "";
   const cap = s.out
-    ? `Fell ${s.nowdd.toFixed(1)}% from the peak on ${dayLabel(s.day)} and crossed the line. The season ended there, ${s.ret>=0?"while still up":"down"} ${Math.abs(s.ret).toFixed(1)}% overall.`
+    ? `Fell ${s.nowdd.toFixed(1)}% from the peak on ${dayLabel(s.day)} and crossed the line. Off the board for the rest of the month, ${s.ret>=0?"while still up":"down"} ${Math.abs(s.ret).toFixed(1)}% overall.`
     : `The red line trails 15% below the highest point so far. Right now this trader has ${(LINE-s.nowdd).toFixed(1)} points of room. Drag across the chart to read any day.`;
   return `${close}<h2 id="profile-name">${h}</h2>
-    <div class="profile__tags">${tags}</div>
+    ${tags}
     <p class="profile__style">${t.style}</p>
-    <p class="profile__since">Record starts Jan 4, 2027. Nothing is backfilled.</p>
+    <p class="profile__since">One month of a sample record. A real record starts the day you link, and nothing is backfilled.</p>
     <dl class="stats">
       <div><dt class="cap">Return</dt><dd class="${cls(s.ret)}">${pct(s.ret)}</dd></div>
       <div><dt class="cap">Worst drop</dt><dd>${pct(-s.maxdd)}</dd></div>
@@ -153,7 +113,7 @@ function profileHTML(h){
     <p class="chart__cap">${cap}</p>
     <h3>Where the trades were</h3>
     <div class="mix" aria-hidden="true">${t.mix.map(m => `<i style="width:${m[1]}%"></i>`).join("")}</div>
-    <p class="mix__key">${t.mix.map(m => m[0]+" "+m[1]+"%").join(", ")}. ${t.trades} trades this season.</p>
+    <p class="mix__key">${t.mix.map(m => m[0]+" "+m[1]+"%").join(", ")}. ${t.trades} trades this month.</p>
     <h3>Latest verified trades</h3>
     <table class="trades"><tbody>${tradeRows(t.recent)}</tbody></table>${fine}`;
 }
@@ -167,7 +127,7 @@ function openProfile(h, from){
   dlg.scrollTop = 0;
   if (typeof dlg.showModal === "function") { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute("open","");
   const t = byHandle[h], slot = document.getElementById("profile-chart");
-  if (t && slot) ExileChart.mount(slot, {values:t.curve, start:DAY0, ranges:SEASON_RANGES, range:"S", line:LINE, height:230, out:t.s.out});
+  if (slot) ExileChart.mount(slot, {values:t.curve, start:DAY0, ranges:MONTH_RANGES, range:"M", line:LINE, height:230, out:t.s.out});
   document.getElementById("profile-close").focus();
 }
 function closeProfile(){ if (typeof dlg.close === "function") dlg.close(); else dlg.removeAttribute("open"); }
@@ -180,18 +140,14 @@ dlg.addEventListener("click", e => {
 document.addEventListener("click", e => {
   if (dlg.contains(e.target)) return;
   const row = e.target.closest("tr.row");
-  if (!row) return;
+  if (!row || !byHandle[row.dataset.h]) return;
   openProfile(row.dataset.h, row.querySelector(".who"));
 });
 
 /* ---------- photo stack ---------- */
 const PHOTOS = [
-  {t:"Everett Rosauer", c:"The official one. The next few are more accurate."},
-  {t:"Hole in one", v:true, c:"Hole 11 at Solmar Golf Links, Cabo San Lucas. 119 yards with a 52 degree wedge, December 29, 2025. The head pro signed the flag."},
-  {t:"Queenstown, New Zealand", c:"April 2026."},
-  {t:"Above Queenstown", c:"April 2026."},
-  {t:"Wakesurfing", c:"Behind the boat."},
-  {t:"Dirt bike", c:"In the pines."}
+  {t:"Everett Rosauer", c:"The official one. The other is more accurate."},
+  {t:"Hole in one", v:true, c:"Hole 11 at Solmar Golf Links, Cabo San Lucas. 119 yards with a 52 degree wedge, December 29, 2025. The head pro signed the flag."}
 ];
 const prints = [...document.querySelectorAll(".print")];
 const capEl = document.getElementById("stack-cap");
@@ -205,7 +161,6 @@ function layStack(){
 }
 function turn(dir){
   if (turning) return;
-  if (dir < 0){ order.unshift(order.pop()); layStack(); return; }
   const top = prints[order[0]];
   const land = () => { order.push(order.shift()); top.classList.remove("is-leaving"); layStack(); turning = false; };
   if (still) return land();
@@ -214,7 +169,6 @@ function turn(dir){
   setTimeout(land, 280);
 }
 document.getElementById("stack-next").addEventListener("click", () => turn(1));
-document.getElementById("stack-back").addEventListener("click", () => turn(-1));
 document.getElementById("stack-tap").addEventListener("click", () => turn(1));
 layStack();
 
@@ -225,49 +179,7 @@ if (window.EXILE.founderEmail){
   founderMail.textContent = window.EXILE.founderEmail;
 }
 
-/* ---------- waitlist ---------- */
-const form = document.getElementById("waitlist");
-const statusEl = document.getElementById("wl-status");
-const emailEl = document.getElementById("wl-email");
-const submitEl = document.getElementById("wl-submit");
 const FRAMED = window.self !== window.top;   /* true inside a preview frame, where outside requests are blocked */
-function say(html, bad){ statusEl.innerHTML = html; statusEl.classList.toggle("is-error", !!bad); }
-function syncRole(){ submitEl.textContent = form.role.value === "firm" ? "Ask for a call" : "Join the waitlist"; }
-form.addEventListener("change", syncRole);
-
-/* "Talk to us about the pilot" lands on the form with Trading firm already picked. */
-function firmMode(){
-  document.getElementById("wl-role-firm").checked = true;
-  syncRole();
-  document.getElementById("join").scrollIntoView({behavior: still ? "auto" : "smooth"});
-  emailEl.focus({preventScroll:true});
-}
-document.querySelectorAll('a[href="#join-firm"]').forEach(a => a.addEventListener("click", e => { e.preventDefault(); firmMode(); }));
-if (location.hash === "#join-firm") firmMode();
-
-form.addEventListener("submit", async e => {
-  e.preventDefault();
-  const email = emailEl.value.trim().toLowerCase();
-  if (email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ say("Enter a full email address, like you@email.com.", true); emailEl.focus(); return; }
-  const role = form.role.value;
-  const done = role === "firm" ? "Got it. We will write to you about the pilot." : "You're on the list. We will email you before Season Zero opens.";
-  if (document.getElementById("wl-hp").value){ form.reset(); syncRole(); say(done); return; }   /* a bot filled the hidden box */
-  const data = {email, role, markets: [...form.querySelectorAll('input[name="markets"]:checked')].map(i => i.value)};
-  const wl = window.EXILE.waitlist;
-  submitEl.disabled = true;
-  say("Saving.");
-  try {
-    const res = await fetch(wl.url, {method:"POST", headers:{"Content-Type":"application/json", "apikey":wl.key, "Prefer":"return=minimal"}, body:JSON.stringify(data)});
-    if (res.status === 409){ form.reset(); syncRole(); say("That email is already on the list. You're set."); return; }
-    if (!res.ok) throw new Error(String(res.status));
-    form.reset(); syncRole();
-    say(done);
-  } catch (err) {
-    say(FRAMED
-      ? "This private preview can't reach the list, so nothing was saved. The form works on the live site."
-      : `That did not go through, so nothing was saved. Try again, or message ${window.EXILE.contactHTML("Season Zero waitlist")}.`, true);
-  } finally { submitEl.disabled = false; }
-});
 
 /* ---------- traders: real profiles, shown once approved ---------- */
 (async function(){

@@ -8,12 +8,12 @@ Static site for Exile. No build step. Vercel serves the files as they are.
 - `account.html` + `account.js` sign in and edit your own trader profile (email and password, through Supabase Auth)
 - `trader.html` a public profile, served at `/t/<handle>`
 - `vendor/` the pinned Supabase browser library, used only by the account page
-- `config.js` shared settings: contact email, LinkedIn, waitlist endpoint, Supabase project
+- `config.js` shared settings: contact email, LinkedIn, Supabase project
 - `pages.css` styles for the inside pages (the main page carries its own)
 - `vercel.json` clean URLs, the `/firms` shortcut, security headers
 
 To change the contact email, edit `contactEmail` in `config.js`.
-The waitlist saves to the `waitlist` table in the Supabase project named `exile`.
+The site no longer has a waitlist form. The old `waitlist` table is still in the Supabase project named `exile`.
 Profiles live in the `profiles` table and photos in the `avatars` bucket. A profile shows in the home page Traders section only after `listed` is set to true in the Supabase table editor.
 Fonts are Big Shoulders Display and Barlow, both under the SIL Open Font License (see `fonts/`).
 

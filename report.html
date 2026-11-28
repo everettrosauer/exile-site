@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sample scouting report | Exile</title>
-<meta name="description" content="A sample of the one page scouting report Exile plans to produce for top Pro finishers: winning days, risk control, sizing and behavior after a loss. Made up trader, sample data.">
+<meta name="description" content="A sample of the one page scouting report Exile plans to produce from a verified record: winning days, risk control, sizing and behavior after a loss. Made up trader, sample data.">
 <meta property="og:title" content="Exile sample scouting report">
-<meta property="og:description" content="What a firm would receive for a top Pro finisher. Behavior first, returns second. Made up trader, sample data.">
+<meta property="og:description" content="What a firm would receive for a trader who shares their record. Behavior first, returns second. Made up trader, sample data.">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://www.joinexile.com/og.png">
 <meta name="theme-color" content="#070C16">
@@ -124,18 +124,18 @@
   <div class="pre">
     <div>
       <h1>Sample scouting report</h1>
-      <p class="lead">This is the one page report a trading firm would receive for a top Pro finisher who chooses to share theirs. The trader below is made up. The measures are the real ones. Returns come second here. How someone sizes, cuts and trades after a loss comes first.</p>
+      <p class="lead">This is the one page report a trading firm would receive for a trader who chooses to share theirs. The trader below is made up. The measures are the real ones. Returns come second here. How someone sizes, cuts and trades after a loss comes first.</p>
       <div class="actions">
-        <a class="btn" href="index.html#join-firm">Talk to us about the pilot</a>
+        <a class="btn" href="mailto:everett@joinexile.com?subject=Exile%20scouting%20report">Email Everett</a>
         <button class="btn btn--ghost" type="button" id="print" hidden>Print or save as PDF</button>
       </div>
     </div>
     <div class="box box--dash">
       <h2>Before you read it</h2>
       <ul class="ticks">
-        <li>Nothing has run yet. No real trader has linked an account, and no firm has signed on.</li>
-        <li>Season Zero is planned for Jan 4 to Jan 31, 2027, with 40 traders.</li>
-        <li>Four weeks is a behavior screen, not a track record.</li>
+        <li>Nothing is live yet. No real trader has linked an account, and no firm has signed on.</li>
+        <li>Account linking is being built. A real report will cover at least one full month of a verified record.</li>
+        <li>One month is a behavior screen, not a track record.</li>
         <li>Exile is run by Everett Rosauer, a senior at Lafayette College. <a href="https://www.linkedin.com/in/everett-rosauer-70479b1b5/" rel="noopener">LinkedIn</a>, <a href="mailto:everett@joinexile.com?subject=Exile%20scouting%20report">everett@joinexile.com</a>.</li>
       </ul>
     </div>
@@ -146,9 +146,9 @@
       <div>
         <p class="rhead__kind cap">Exile scouting report</p>
         <h2 id="r-name">basis_pt</h2>
-        <p class="rhead__meta" id="r-meta">Pro division, Season Zero. Jan 4 to Jan 31, 2027.</p>
+        <p class="rhead__meta" id="r-meta">Sample month, Jan 4 to Jan 31.</p>
       </div>
-      <div class="rhead__stamps"><span class="stamp stamp--plain">Sample data</span><span class="stamp stamp--ok">Full record</span></div>
+      <div class="rhead__stamps"><span class="stamp stamp--plain">Sample data</span></div>
     </header>
 
     <section class="read">
@@ -161,7 +161,7 @@
 
     <section class="two">
       <div>
-        <h2>Season curve</h2>
+        <h2>The month</h2>
         <div id="r-chart"></div>
         <p class="note" id="r-chartcap"></p>
       </div>
@@ -215,11 +215,11 @@
       <div>
         <h2>What gets checked</h2>
         <ul class="ticks">
-          <li>One brokerage account, linked before day one. Read only.</li>
+          <li>One brokerage account, linked before the month began. Read only.</li>
           <li>Every trade is read from the broker. Nothing is typed in.</li>
           <li>Deposits and withdrawals are taken out of the return.</li>
           <li>Identity check: a government ID matched to the name on the account.</li>
-          <li>Statement check: the broker's own statements for the season, matched against the linked record.</li>
+          <li>Statement check: the broker's own statements for the month, matched against the linked record.</li>
           <li>Account size stays private. This trader agreed to share a band: $25,000 to $50,000.</li>
         </ul>
         <p class="note">This is a sample, so nothing here was really checked. In a real report every line is done before the trader shares it.</p>
@@ -227,7 +227,7 @@
       <div>
         <h2>What this report can't tell you</h2>
         <ul class="ticks">
-          <li>Whether it lasts. Four weeks shows how someone handles risk. It does not prove an edge.</li>
+          <li>Whether it lasts. One month shows how someone handles risk. It does not prove an edge.</li>
           <li>What happened in accounts the trader never linked.</li>
           <li>Why each trade was made. That is what the interview is for.</li>
           <li>How this style holds up at ten times the size.</li>
@@ -236,7 +236,7 @@
     </section>
 
     <footer class="rfoot">
-      <p>Sample data. basis_pt is not a real person and these are not real results. Each trader decides who sees their report. Exile is not a broker, an exchange or an investment adviser. A scouting report describes what happened in one season. It is not a recommendation to hire anyone or to give anyone money to trade.</p>
+      <p>Sample data. basis_pt is not a real person and these are not real results. Each trader decides who sees their report. Exile is not a broker, an exchange or an investment adviser. A scouting report describes what happened in the time it covers. It is not a recommendation to hire anyone or to give anyone money to trade.</p>
     </footer>
   </article>
 </section>
@@ -263,7 +263,7 @@
 <script src="chart.js"></script>
 <script src="data.js"></script>
 <script>
-/* Every number on this page is computed from two things in data.js: the season curve and the trade ledger
+/* Every number on this page is computed from two things in data.js: the month's curve and the trade ledger
    for one made up trader. The ledger adds up, day by day, to the curve, so the report cannot disagree with itself
    or with the board on the home page. */
 const WHO = "basis_pt";
@@ -287,7 +287,7 @@ const RANK = active.findIndex(t => t.h === WHO) + 1, FIELD = TRADERS.length;
 const T = LEDGER.map(([d,m,what,s,r]) => ({d,m,what,s,r,hit:s*r/100}));
 const N = T.length;
 
-/* season level */
+/* month level */
 let peak = CURVE[0], maxdd = 0, ddDay = 0;
 CURVE.forEach((v,d) => { peak = Math.max(peak,v); const dd=(1-v/peak)*100; if (dd>maxdd){maxdd=dd; ddDay=d;} });
 const ret = CURVE[28]-100, score = ret/Math.max(maxdd,1);
@@ -328,13 +328,13 @@ let run=0, best=0, endAt=-1;
 T.forEach((t,i) => { if (t.r<0){ run++; if (run>best){best=run; endAt=i;} } else run=0; });
 
 /* header and the read */
-$("r-meta").textContent = `Pro division, Season Zero. Jan 4 to Jan 31, 2027. Rank ${RANK} of ${FIELD} in Pro.`;
+$("r-meta").textContent = `Sample month, Jan 4 to Jan 31. Rank ${RANK} of ${FIELD} on the board.`;
 $("r-n").textContent = N;
 const upWeeks = weeks.filter(x => x>0).length;
 $("r-read").textContent =
   `Made ${plain(ret)} with a worst drop of ${plain(maxdd)}, so the line was never close. ` +
   `Green on ${upDays} of ${daily.length} trading days, and the best day was ${ratio.toFixed(1)} times the typical losing day. ` +
-  `No single trade made the season. The best one was ${plain(top1,0)} of the profit, and the record is still up ${plain(retEx3)} without the best three. ` +
+  `No single trade made the month. The best one was ${plain(top1,0)} of the profit, and the record is still up ${plain(retEx3)} without the best three. ` +
   `Sizes down after losing: ${plain(sizeL)} of the account in the next trade after a loss, ${plain(sizeW)} after a win. ` +
   `Up in ${upWeeks} of 4 weeks.` +
   (pair ? ` The weak spot is ${day(pair.a)} and ${day(pair.b)}: two losing days in a row that cost ${plain(pair.sum)}.` : "");
@@ -349,8 +349,8 @@ $("r-stats").innerHTML = [
 ].map(([k,val]) => `<div><dt class="cap">${k}</dt><dd>${val}</dd></div>`).join("");
 
 /* the same chart as the board: pick a range, then move across it to read any day */
-ExileChart.mount($("r-chart"), {values:CURVE, start:DAY0, line:LINE, range:"S", height:220,
-  ranges:[{key:"1W",label:"1W",days:7,say:"past week"},{key:"2W",label:"2W",days:14,say:"past two weeks"},{key:"S",label:"Season",days:999,say:"this season"}]});
+ExileChart.mount($("r-chart"), {values:CURVE, start:DAY0, line:LINE, range:"M", height:220,
+  ranges:[{key:"1W",label:"1W",days:7,say:"past week"},{key:"2W",label:"2W",days:14,say:"past two weeks"},{key:"M",label:"Month",days:999,say:"this month"}]});
 $("r-chartcap").textContent = `The red line trails 15% below the highest point so far. The low came on ${day(ddDay)}, with ${(LINE-maxdd).toFixed(1)} points of room left. The account is flat on weekends and on Jan 18, when the market was closed.`;
 
 /* day by day */
@@ -384,7 +384,7 @@ $("r-afterfacts").innerHTML =
 $("r-conc").innerHTML =
   row("Best trade", plain(top1,0)+" of profit", `${byHit[0].what}, ${day(byHit[0].d)}`) +
   row("Best three trades", plain(top3,0)+" of profit") +
-  row("Return without the best three", `<span class="${cls(retEx3)}">${pct(retEx3)}</span>`, "The season replayed with those trades removed") +
+  row("Return without the best three", `<span class="${cls(retEx3)}">${pct(retEx3)}</span>`, "The month replayed with those trades removed") +
   row("Held to a total loss", fullLoss+" of "+N+" trades", "Option positions that expired worthless");
 
 const mkts = [...new Set(T.map(t => t.m))];
